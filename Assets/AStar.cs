@@ -21,6 +21,13 @@ public class Node
         this.y = y;
         this.g = g;
     }
+
+    public void Init()
+    {
+        f = 0;
+        g = 0;
+        h = 0;
+    }
 }
 
 enum Dir
@@ -34,46 +41,27 @@ public class AStar : MonoBehaviour
     public UnityAction<int, int> PathFindAction;
 
     private Node[,] map = null;
-    private GameObject[,] objects = null;
-    // 노드
-    private GameObject prefab;
-    private float nodeGap;
-    private Transform nodeParent;
 
-    // 맵의 크기
-    private int mapSizeX;
-    private int mapSizeY;
-
-    public void Init(MapSettings settings)
+    private void Awake()
     {
-        prefab = settings.NodePrefab;
-        nodeParent = settings.NodeParent;
-        nodeGap = settings.NodeGap;
-        mapSizeX = settings.MapSizeX;
-        mapSizeY = settings.MapSizeY;
-        CreateMap();
+        MapGenerator.MapGenerated += (map) => { this.map = map; };
     }
 
-    public void CreateMap()
+    private void InitMapData()
     {
-        objects = new GameObject[mapSizeX, mapSizeY];
-        map = new Node[mapSizeX, mapSizeY];
-
-        // 노드 생성
-        for (int i = 0; i < map.GetLength(0); i++)
+        for (int x = 0; x < map.GetLength(0); x++)
         {
-            for (int j = 0; j < map.GetLength(1); j++)
+            for (int y = 0; y < map.GetLength(1); y++)
             {
-                GameObject grid = Instantiate(prefab, nodeParent);
-                grid.transform.position = new Vector3(i * nodeGap, 0, j * nodeGap);
-                objects[i, j] = grid;
-                map[i, j] = new Node(i, j, 0);
+                map[x, y].Init();
             }
         }
     }
 
     public Node Navigate(int startX, int startY, int destX, int destY)
     {
+        // 초기화
+        InitMapData();
         List<Node> openList = new List<Node>();
         List<Node> closeList = new List<Node>();
 
@@ -95,6 +83,7 @@ public class AStar : MonoBehaviour
         parentNode = new Node(curX, curY, 0);
         parentNode.h = (Mathf.Abs(curX - destX) + Mathf.Abs(curY - destY)) * 10;    // 맨하탄 거리 방식으로 측정
         parentNode.f = parentNode.g + parentNode.h;
+        closeList.Add(parentNode);
 
         bool isDest = false;
 
@@ -162,11 +151,6 @@ public class AStar : MonoBehaviour
         return null;
     }
 
-    public GameObject GetNode(int x, int y)
-    {
-        return objects[x, y];
-    }
-
     private (int, int) GetNextPosition(int x, int y, Dir direction)
     {
         return direction switch
@@ -175,6 +159,10 @@ public class AStar : MonoBehaviour
             Dir.Right => (x + 1, y),
             Dir.Up => (x, y + 1),
             Dir.Down => (x, y - 1),
+            Dir.LeftUp => (x - 1, y + 1),
+            Dir.RightUp => (x + 1, y + 1),
+            Dir.LeftDown => (x - 1, y - 1),
+            Dir.RightDown => (x + 1, y + 1),
             _ => (x, y)
         };
     }

@@ -22,12 +22,14 @@ public class MapInterface
 
 public class MapPresenter : MapInterface.IMapPresenter
 {
+    private MapGenerator mapGenerator;
     private AStar aStar;
     private MapInterface.IMapView mapView;
 
-    public MapPresenter(AStar aStar, MapView mapView)
+    public MapPresenter(AStar aStar, MapGenerator mapGenerator, MapInterface.IMapView mapView)
     {
         this.aStar = aStar;
+        this.mapGenerator = mapGenerator;
         this.mapView = mapView;
 
         this.mapView.OnPathRequested += OnPathRequested;
@@ -45,7 +47,7 @@ public class MapPresenter : MapInterface.IMapPresenter
         while (path != null)
         {
             Debug.Log(path.x + ", " + path.y);
-            mapView.OnPathNodeEvent(aStar.GetNode(path.x, path.y));
+            mapView.OnPathNodeEvent(mapGenerator.GetNode(path.x, path.y));
             path = path.parent;
         }
     }
