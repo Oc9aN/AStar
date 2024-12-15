@@ -1,10 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class MapView : MonoBehaviour, MapInterface.IMapView
+public class PathView : MonoBehaviour
 {
     [Header("출발지와 목적지")]
     [SerializeField] private int startX;
@@ -18,6 +16,13 @@ public class MapView : MonoBehaviour, MapInterface.IMapView
     {
         MeshRenderer mesh = node.GetComponent<MeshRenderer>();
         mesh.material.color = Color.red;
+        meshs.Add(mesh);
+    }
+
+    public void OnSetObstacleEvent(GameObject node)
+    {
+        MeshRenderer mesh = node.GetComponent<MeshRenderer>();
+        mesh.material.color = Color.black;
         meshs.Add(mesh);
     }
 

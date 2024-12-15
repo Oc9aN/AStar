@@ -1,7 +1,6 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,6 +11,7 @@ public class Node
     public int f = 0;
     public int g = 0;
     public int h = 0;
+    public bool isObstacle = false;
 
     public Node parent;
 
@@ -42,9 +42,11 @@ public class AStar : MonoBehaviour
 
     private Node[,] map = null;
 
+    public Node[,] Map { private get => map; set { map = value; } }
+
     private void Awake()
     {
-        MapGenerator.MapGenerated += (map) => { this.map = map; };
+        //MapGenerator.OnMapModified += (map) => { this.map = map; };
     }
 
     private void InitMapData()
@@ -99,7 +101,37 @@ public class AStar : MonoBehaviour
 
                 Node node = map[nextX, nextY];
 
-                // 이미 방문한 노드인 경우
+                if (node.isObstacle == true)
+                    continue;                   // 장애물인 경우
+
+                // 이미 방문한 노드인 경우 OR 대각선 이동 불가인 경우
+                switch (dir[i])
+                {
+                    case Dir.LeftUp:
+                        if (IsObstacleInDirection(parentNode.x - 1, parentNode.y))
+                            continue;
+                        if (IsObstacleInDirection(parentNode.x, parentNode.y + 1))
+                            continue;
+                        break;
+                    case Dir.RightUp:
+                        if (IsObstacleInDirection(parentNode.x + 1, parentNode.y))
+                            continue;
+                        if (IsObstacleInDirection(parentNode.x, parentNode.y + 1))
+                            continue;
+                        break;
+                    case Dir.LeftDown:
+                        if (IsObstacleInDirection(parentNode.x - 1, parentNode.y))
+                            continue;
+                        if (IsObstacleInDirection(parentNode.x, parentNode.y - 1))
+                            continue;
+                        break;
+                    case Dir.RightDown:
+                        if (IsObstacleInDirection(parentNode.x + 1, parentNode.y))
+                            continue;
+                        if (IsObstacleInDirection(parentNode.x, parentNode.y + 1))
+                            continue;
+                        break;
+                }
                 Node isClose = closeList.Find((n) => n.x == nextX && n.y == nextY);
                 if (isClose != null)
                     continue;
@@ -169,4 +201,7 @@ public class AStar : MonoBehaviour
 
     private bool ExistPosition(int x, int y) =>
     x >= 0 && x < map.GetLength(0) && y >= 0 && y < map.GetLength(1);
+
+    private bool IsObstacleInDirection(int x, int y) =>
+    ExistPosition(x, y) && map[x, y].isObstacle;
 }
