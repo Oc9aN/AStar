@@ -2,18 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class UIInputView : MonoBehaviour
+namespace MapSystem
 {
-    [SerializeField] Text xSizeText;
-    [SerializeField] Text ySizeText;
-
-    public (int x, int y) getMapSize()
+    public class UIInputView : MonoBehaviour
     {
-        int xSize = 0;
-        int ySize = 0;
-        int.TryParse(xSizeText.text, out xSize);
-        int.TryParse(ySizeText.text, out ySize);
-        return (xSize, ySize);
+        [SerializeField] Text xSizeText;
+        [SerializeField] Text ySizeText;
+
+        public (int x, int y) getMapSize()
+        {
+            int xSize = 0;
+            int ySize = 0;
+            int.TryParse(xSizeText.text, out xSize);
+            int.TryParse(ySizeText.text, out ySize);
+            return (xSize, ySize);
+        }
     }
 }
