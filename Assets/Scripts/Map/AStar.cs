@@ -59,7 +59,7 @@ namespace MapSystem
             }
         }
 
-        public Node Navigate(int startX, int startY, int destX, int destY)
+        public List<Node> Navigate(int startX, int startY, int destX, int destY)
         {
             // 초기화
             InitMapData();
@@ -156,7 +156,14 @@ namespace MapSystem
                     {
                         Debug.Log("탐색 성공");
                         isDest = true;
-                        return node;
+                        Node path = node;
+                        List<Node> pathList = new();
+                        while (path != null)
+                        {
+                            pathList.Add(path);
+                            path = path.parent;
+                        }
+                        return pathList;
                     }
                 }
                 // 방향을 다 둘러본 후
