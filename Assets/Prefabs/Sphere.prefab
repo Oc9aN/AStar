@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 539645400}
   - component: {fileID: 539645402}
   - component: {fileID: 539645401}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: HPBack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 678519957}
   - component: {fileID: 678519956}
   - component: {fileID: 678519955}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: HPCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 1034632216}
   - component: {fileID: 1034632218}
   - component: {fileID: 1034632217}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: HP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 1331354167395200502}
   - component: {fileID: 1331354167395200503}
   - component: {fileID: 1331354167395200507}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}

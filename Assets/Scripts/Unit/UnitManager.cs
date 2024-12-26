@@ -18,8 +18,7 @@ namespace UnitSystem
         {
             if (path == null) return;
             // 유닛 생성
-            GameObject unitObject = Instantiate(prefab, transform);
-            unitObject.transform.position = path[0];
+            GameObject unitObject = Instantiate(prefab, path[0], Quaternion.identity, transform);
             unitList.Add(unitObject.GetComponent<Unit>());
 
             MoveUnitByPath(unitObject.GetComponent<Unit>());
