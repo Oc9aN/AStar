@@ -18,5 +18,11 @@ namespace MapSystem
         {
             OnCreateMapRequested?.Invoke();
         }
+
+        private void OnDestroy()
+        {
+            OnPathRequested = null;
+            OnCreateMapRequested = null;
+        }
     }
 }

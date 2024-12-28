@@ -1,22 +1,22 @@
 using System.Collections;
+using UnitSystem;
 using UnityEngine;
 
-public class NormalTower : Tower
+namespace TowerSystem
 {
-    protected override IEnumerator Attack()
+    public class NormalTower : Tower
     {
-        if (target == null) yield break;
-
-        float distance = Vector3.Distance(transform.position, target.transform.position);
-        while (distance < radius)
+        //TODO: 이벤트 OnDestroy에서 놓아주기
+        protected override IEnumerator Attack()
         {
-            Debug.DrawLine(transform.position, target.transform.position, Color.red);
-            distance = Vector3.Distance(transform.position, target.transform.position);
-            yield return null;
+            if (target == null) yield break;
+            Unit targetUnit = target.GetComponent<Unit>();
+            while (true)
+            {
+                // 공격
+                targetUnit.OnDamaged(data.Damage);
+                yield return new WaitForSeconds(data.Delay);
+            }
         }
-
-        // 다음 타겟 선정
-        findingTargetCoroutine = StartCoroutine(GetTarget());
-        yield break;
     }
 }

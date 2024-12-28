@@ -73,5 +73,10 @@ namespace MapSystem
                 }
             }
         }
+
+        private void OnDestroy()
+        {
+            OnMapModified = null;
+        }
     }
 }

@@ -366,4 +366,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: e7b8f3787903fcf4e98ef577a85a5768, type: 2}
-  HpImage: {fileID: 0}
+  HpImage: {fileID: 1034632217}
+  hp: 0
