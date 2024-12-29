@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace UnitSystem
 {
-    public class NormalUnit : MonoBehaviour, Unit
+    public class NormalUnit : MonoBehaviour, IUnit
     {
         [SerializeField] private UnitData data;
         [SerializeField] private Image HpImage;

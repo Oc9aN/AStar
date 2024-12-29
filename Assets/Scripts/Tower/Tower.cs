@@ -11,16 +11,19 @@ namespace TowerSystem
         [SerializeField] protected TowerData data;
         int targetLayer => 1 << LayerMask.NameToLayer("Unit");
 
+        // 배치시 true
+        private bool isActive;
+        public bool IsActive { get { return isActive; } set { isActive = value; } }
+
         protected GameObject target;
 
         private Coroutine findingTargetCoroutine;
         private Coroutine RangeCheckCoroutine;
         private Coroutine AttackCoroutine;
 
-        private void Start()
-        {
-            findingTargetCoroutine = StartCoroutine(GetTarget());
-        }
+        public void ActiveTower() => RangeCheckCoroutine = StartCoroutine(RangeCheck());
+
+        public void InActiveTower() => StopAllCoroutines();
 
         protected virtual IEnumerator Attack() { yield break; }
 

@@ -9,7 +9,7 @@ namespace UnitSystem
         // 맵으로부터 path를 받아 각 유닛에게 전달
         [SerializeField] GameObject prefab;
         [SerializeField] float YMargin;
-        private List<Unit> unitList = new();
+        private List<IUnit> unitList = new();
         private List<Vector3> path = new();
         public List<Vector3> Path { set { path = value; } }
 
@@ -19,12 +19,12 @@ namespace UnitSystem
             if (path == null) return;
             // 유닛 생성
             GameObject unitObject = Instantiate(prefab, path[0], Quaternion.identity, transform);
-            unitList.Add(unitObject.GetComponent<Unit>());
+            unitList.Add(unitObject.GetComponent<IUnit>());
 
-            MoveUnitByPath(unitObject.GetComponent<Unit>());
+            MoveUnitByPath(unitObject.GetComponent<IUnit>());
         }
 
-        public void MoveUnitByPath(Unit unit)
+        public void MoveUnitByPath(IUnit unit)
         {
             unit.MoveByPath(path, YMargin);
         }

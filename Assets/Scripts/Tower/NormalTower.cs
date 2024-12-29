@@ -10,7 +10,7 @@ namespace TowerSystem
         protected override IEnumerator Attack()
         {
             if (target == null) yield break;
-            Unit targetUnit = target.GetComponent<Unit>();
+            IUnit targetUnit = target.GetComponent<IUnit>();
             while (true)
             {
                 // 공격
