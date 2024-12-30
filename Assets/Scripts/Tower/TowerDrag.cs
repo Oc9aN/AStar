@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using MapSystem;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,36 +8,40 @@ using UnityEngine.EventSystems;
 
 namespace TowerSystem
 {
-    [RequireComponent(typeof(Tower))]
-    public class TowerDrag : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler
+    public interface IPlaceable
     {
-        public event UnityAction SnapRelaseAction;
-        public event UnityAction<TowerDrag> SnapAction;
-        // 높이 보정
+        public IParentable snapNode { get; set; }
+        public void SetParent(Transform parent, bool isMove = false);
+        public Transform GetParent();
+    }
+    [RequireComponent(typeof(Tower))]
+    public class TowerDrag : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler, IPlaceable
+    {
         [SerializeField] float yMargin;
-        public float YMargin { get { return yMargin; } }
-        // 스냅할 노드드
-        private IPlaceable snapNode = null;
-        public IPlaceable SnapNode { get { return snapNode; } set { snapNode = value; } }
-        // 이전에 스냅되어 있던 노드, 다른 타워와 교체시 사용
-        private IPlaceable prevNode = null;
-        public IPlaceable PrevNode { get { return prevNode; } }
+        public event UnityAction<TowerDrag> SnapAction;
 
-        private Tower tower = null;
-        public Tower Tower { get { return tower; } }
+        public IParentable snapNode { get; set; }
+        public void SetParent(Transform parent, bool isMove = false)
+        {
+            transform.SetParent(parent);
+            if (isMove)
+            {
+                Vector3 newPosition = transform.parent.position;
+                newPosition.y += yMargin;
+                transform.DOMove(newPosition, 0.5f);
+            }
+        }
+        public Transform GetParent() => transform.parent;
 
         private void Awake()
         {
-            tower = transform.GetComponent<Tower>();
             SnapAction += (TowerDrag tower) => snapNode?.SetPlaceOnThis(tower);
             SnapAction += (_) => snapNode?.OnEndTarcking();
-            SnapRelaseAction += () => snapNode?.OnReleaseObject();
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            SnapRelaseAction?.Invoke();
-            prevNode = snapNode;
+            //prevNode = snapNode;
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -55,7 +60,7 @@ namespace TowerSystem
             SnapAction.Invoke(this);
         }
 
-        public void SnapToPlace(IPlaceable snap)
+        public void SnapToPlace(IParentable snap)
         {
             snapNode = snap;
             SnapAction.Invoke(this);
@@ -69,7 +74,7 @@ namespace TowerSystem
 
             if (hit.collider != null)
             {
-                if (hit.collider.TryGetComponent<IPlaceable>(out IPlaceable trackingNode))
+                if (hit.collider.TryGetComponent<IParentable>(out IParentable trackingNode))
                 {
                     if (snapNode != trackingNode)
                     {
@@ -86,7 +91,6 @@ namespace TowerSystem
         private void OnDestroy()
         {
             SnapAction = null;
-            SnapRelaseAction = null;
         }
     }
 }

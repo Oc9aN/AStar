@@ -26,10 +26,7 @@ public class TowerList : MonoBehaviour
         setPositon.x += (space * (towers.Count - 1));
         gridObject.transform.position = setPositon;
 
-        gridObject.GetComponent<IPlaceable>().SetPlaceOnThis(tower.GetComponent<TowerDrag>());
-        gridObject.transform.SetParent(transform);
-
-        tower.GetComponent<TowerDrag>().SnapNode = gridObject.GetComponent<IPlaceable>();
+        gridObject.GetComponent<IParentable>().SetPlaceOnThis(tower.GetComponent<TowerDrag>());
         // 타워 갯수에 맞게 ScrollView 조정
         RectTransform rectTransform = transform as RectTransform;
 
