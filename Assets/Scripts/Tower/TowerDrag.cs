@@ -8,22 +8,16 @@ using UnityEngine.EventSystems;
 
 namespace TowerSystem
 {
-    public interface IPlaceable
-    {
-        public IParentable snapNode { get; set; }
-        public void SetParent(Transform parent, bool isMove = false);
-        public Transform GetParent();
-    }
     [RequireComponent(typeof(Tower))]
-    public class TowerDrag : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler, IPlaceable
+    public class TowerDrag : MonoBehaviour, IDragHandler, IEndDragHandler, IPlaceable
     {
         [SerializeField] float yMargin;
-        public event UnityAction<TowerDrag> SnapAction;
-
+        public event UnityAction<IPlaceable> TrySnapAction;
         public IParentable snapNode { get; set; }
-        public void SetParent(Transform parent, bool isMove = false)
+        public void SetParent(Transform parent, bool isMove = false, UnityAction OnSnapEvent = null)
         {
             transform.SetParent(parent);
+            OnSnapEvent?.Invoke();
             if (isMove)
             {
                 Vector3 newPosition = transform.parent.position;
@@ -32,16 +26,15 @@ namespace TowerSystem
             }
         }
         public Transform GetParent() => transform.parent;
+        public void OnSnapEvent() => Tower.ActiveTower();
+
+        private Tower tower = null;
+        private Tower Tower => tower ??= GetComponent<Tower>();
 
         private void Awake()
         {
-            SnapAction += (TowerDrag tower) => snapNode?.SetPlaceOnThis(tower);
-            SnapAction += (_) => snapNode?.OnEndTarcking();
-        }
-
-        public void OnBeginDrag(PointerEventData eventData)
-        {
-            //prevNode = snapNode;
+            TrySnapAction += (IPlaceable tower) => snapNode?.SetPlaceOnThis(tower);
+            TrySnapAction += (_) => snapNode?.OnEndTarcking();
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -57,13 +50,13 @@ namespace TowerSystem
         public void OnEndDrag(PointerEventData eventData)
         {
             // 위치 확인 후 배치 또는 복귀
-            SnapAction.Invoke(this);
+            TrySnapAction.Invoke(this);
         }
 
         public void SnapToPlace(IParentable snap)
         {
             snapNode = snap;
-            SnapAction.Invoke(this);
+            TrySnapAction.Invoke(this);
         }
 
         private void BottomTracking()
@@ -90,7 +83,7 @@ namespace TowerSystem
 
         private void OnDestroy()
         {
-            SnapAction = null;
+            TrySnapAction = null;
         }
     }
 }

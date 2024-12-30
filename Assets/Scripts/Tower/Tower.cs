@@ -9,7 +9,7 @@ namespace TowerSystem
     {
         // 가장 가까운 target을 찾고 범위를 나갈 때까지 공격, 이후 다시 반복
         [SerializeField] protected TowerData data;
-        int targetLayer => 1 << LayerMask.NameToLayer("Unit");
+        private int targetLayer => 1 << LayerMask.NameToLayer("Unit");
 
         // 배치시 true
         private bool isActive;

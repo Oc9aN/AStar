@@ -5,12 +5,6 @@ using UnityEngine.EventSystems;
 
 namespace MapSystem
 {
-    public interface IParentable
-    {
-        public void OnTracking();
-        public void OnEndTarcking();
-        public void SetPlaceOnThis(IPlaceable placeable);
-    }
     public class NodeObject : MonoBehaviour, IPointerClickHandler, IParentable
     {
         public Action OnSetPathEvent;
@@ -63,7 +57,7 @@ namespace MapSystem
                 tower.SetParent(null);
                 placedObejct.SetParent(exchangeNode, true);
             }
-            tower.SetParent(transform, true);
+            tower.SetParent(transform, true, tower.OnSnapEvent);
         }
     }
 }

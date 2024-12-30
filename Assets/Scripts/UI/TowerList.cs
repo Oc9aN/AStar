@@ -22,6 +22,8 @@ public class TowerList : MonoBehaviour
         firstPosition.x += leftMargin;
 
         GameObject gridObject = Instantiate(grid);
+        gridObject.transform.SetParent(transform);
+
         Vector3 setPositon = firstPosition;
         setPositon.x += (space * (towers.Count - 1));
         gridObject.transform.position = setPositon;

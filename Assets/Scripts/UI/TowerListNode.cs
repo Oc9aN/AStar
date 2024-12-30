@@ -8,9 +8,10 @@ using UnityEngine;
 public class TowerListNode : MonoBehaviour, IParentable
 {
     public Tower placedObejct { get; set; }
-    private MeshRenderer meshRenderer => GetComponent<MeshRenderer>();
-    public void OnTracking() => meshRenderer.material.color = Color.yellow;
-    public void OnEndTarcking() => meshRenderer.material.color = Color.white;
+    private MeshRenderer meshRenderer = null;
+    private MeshRenderer MeshRenderer => meshRenderer ??= GetComponent<MeshRenderer>();
+    public void OnTracking() => MeshRenderer.material.color = Color.yellow;
+    public void OnEndTarcking() => MeshRenderer.material.color = Color.white;
     public void SetPlaceOnThis(IPlaceable tower)
     {
         if (transform.childCount > 0)

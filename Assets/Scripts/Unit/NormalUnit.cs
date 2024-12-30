@@ -13,7 +13,8 @@ namespace UnitSystem
         [SerializeField] private Image HpImage;
         [SerializeField, ReadOnly] private int hp;
 
-        private Canvas hpCanvas => GetComponentInChildren<Canvas>();
+        private Canvas hpCanvas = null;
+        private Canvas HpCanvas => hpCanvas ??= GetComponentInChildren<Canvas>();
 
         private void Awake()
         {
@@ -28,11 +29,11 @@ namespace UnitSystem
 
         private void HpCanvasSetUp()
         {
-            if (hpCanvas == null) return;
+            if (HpCanvas == null) return;
 
-            Vector3 dir = Camera.main.transform.position - hpCanvas.transform.position;
+            Vector3 dir = Camera.main.transform.position - HpCanvas.transform.position;
 
-            hpCanvas.transform.rotation = Quaternion.LookRotation(dir, Vector3.back);
+            HpCanvas.transform.rotation = Quaternion.LookRotation(dir, Vector3.back);
         }
 
         public void MoveByPath(List<Vector3> path, float YMargin)
