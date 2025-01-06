@@ -11,6 +11,7 @@ namespace MapSystem
         [SerializeField] UIInputView uiInputView;
         [SerializeField] UnitSystem.UnitManager unitManager;
         private AStar aStar;
+        private List<Node> path = null;
         private void Awake()
         {
             aStar = new AStar();
@@ -43,21 +44,30 @@ namespace MapSystem
 
         public void OnPathRequested()
         {
+            if (path != null && path.Count > 0)
+                ResetPath(path);
             (int startX, int startY) = uiInputView.GetStart();
             (int destX, int destY) = uiInputView.GetDest();
-            var path = aStar.Navigate(startX, startY, destX, destY);
+            path = aStar.Navigate(startX, startY, destX, destY);
             ShowPath(path);
 
             // Vector3 리스트로 UnitManager에게 전달
             unitManager.Path = GetVectorPath(path);
         }
 
+        private void ResetPath(List<Node> path) => path.ForEach((n) =>
+                        {
+                            GameObject node = mapGenerator.GetNode(n.x, n.y);
+                            NodeObject nodeObject = node.GetComponent<NodeObject>();
+                            nodeObject.SetNormal(); // 기본으로 복구
+                        });
+
         private void ShowPath(List<Node> path) => path.ForEach((n) =>
                         {
                             Debug.Log(n.x + ", " + n.y);
                             GameObject node = mapGenerator.GetNode(n.x, n.y);
                             NodeObject nodeObject = node.GetComponent<NodeObject>();
-                            nodeObject.OnSetPathEvent.Invoke(); // 길로 선정되었다고 이벤트 전달
+                            nodeObject.SetPath(); // 길로 선정
                         });
 
         private List<Vector3> GetVectorPath(List<Node> path)

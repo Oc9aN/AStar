@@ -13,20 +13,10 @@ namespace TowerSystem
     {
         [SerializeField] float yMargin;
         public event UnityAction<IPlaceable> TrySnapAction;
+        public event UnityAction OnSnapEvent;
+        public event UnityAction OnReleaseEvent;
         public IParentable snapNode { get; set; }
-        public void SetParent(Transform parent, bool isMove = false, UnityAction OnSnapEvent = null)
-        {
-            transform.SetParent(parent);
-            OnSnapEvent?.Invoke();
-            if (isMove)
-            {
-                Vector3 newPosition = transform.parent.position;
-                newPosition.y += yMargin;
-                transform.DOMove(newPosition, 0.5f);
-            }
-        }
         public Transform GetParent() => transform.parent;
-        public void OnSnapEvent() => Tower.ActiveTower();
 
         private Tower tower = null;
         private Tower Tower => tower ??= GetComponent<Tower>();
@@ -35,6 +25,8 @@ namespace TowerSystem
         {
             TrySnapAction += (IPlaceable tower) => snapNode?.SetPlaceOnThis(tower);
             TrySnapAction += (_) => snapNode?.OnEndTarcking();
+
+            OnSnapEvent += Tower.ActiveTower;
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -79,6 +71,21 @@ namespace TowerSystem
             }
             else
                 snapNode?.OnEndTarcking();
+        }
+
+        public void SetParent(Transform parent, bool isMove = false, bool isSnapEvent = false)
+        {
+            // 부모가 바뀐건 이전 노드가 놓아줬다는 뜻
+            OnReleaseEvent?.Invoke();
+            OnReleaseEvent = null;
+            transform.SetParent(parent);
+            if (isSnapEvent) OnSnapEvent?.Invoke();
+            if (isMove)
+            {
+                Vector3 newPosition = transform.parent.position;
+                newPosition.y += yMargin;
+                transform.DOMove(newPosition, 0.5f);
+            }
         }
 
         private void OnDestroy()

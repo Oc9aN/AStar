@@ -35,6 +35,7 @@ namespace MapSystem
                     map[x, y] = new Node(x, y, 0);
                     node.GetComponent<NodeObject>().SetPosition(x, y);
                     node.GetComponent<NodeObject>().OnSetObstacleEvent += (int x, int y) => { SetObstacle(x, y); MapModified(); };
+                    node.GetComponent<NodeObject>().OnSetNonObstacleEvent += (int x, int y) => { SetNonObstacle(x, y); MapModified(); };
                 }
             }
 
@@ -55,6 +56,12 @@ namespace MapSystem
         {
             if (map == null) return;
             map[x, y].isObstacle = true;
+        }
+
+        private void SetNonObstacle(int x, int y)
+        {
+            if (map == null) return;
+            map[x, y].isObstacle = false;
         }
 
         void DestroyAllObjects()

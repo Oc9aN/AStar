@@ -21,7 +21,7 @@ namespace TowerSystem
         private Coroutine RangeCheckCoroutine;
         private Coroutine AttackCoroutine;
 
-        public void ActiveTower() => RangeCheckCoroutine = StartCoroutine(RangeCheck());
+        public void ActiveTower() => RangeCheckCoroutine = StartCoroutine(GetTarget());
 
         public void InActiveTower() => StopAllCoroutines();
 
@@ -29,6 +29,7 @@ namespace TowerSystem
 
         private IEnumerator RangeCheck()
         {
+            Debug.Log($"{transform.name} 타워 활성화");
             if (target == null) yield break;
 
             float distance = Vector3.Distance(transform.position, target.transform.position);

@@ -5,10 +5,10 @@ using UnityEngine.EventSystems;
 
 namespace MapSystem
 {
-    public class NodeObject : MonoBehaviour, IPointerClickHandler, IParentable
+    public class NodeObject : MonoBehaviour, IParentable
     {
-        public Action OnSetPathEvent;
         public event Action<int, int> OnSetObstacleEvent;
+        public event Action<int, int> OnSetNonObstacleEvent;
         private int x;
         private int y;
         public void SetPosition(int x, int y) { this.x = x; this.y = y; }
@@ -19,14 +19,7 @@ namespace MapSystem
         private void Awake()
         {
             placedObejct = null;
-            OnSetPathEvent += SetPath;
             meshRenderer = GetComponent<MeshRenderer>();
-        }
-        public void SetObstacle()
-        {
-            Debug.Log($"장애물 설정: {x}, {y}");
-            meshRenderer.material.color = Color.black;
-            OnSetObstacleEvent?.Invoke(x, y);
         }
 
         public void SetPath()
@@ -34,15 +27,14 @@ namespace MapSystem
             meshRenderer.material.color = Color.red;
         }
 
-        private void OnDestroy()
+        public void SetNormal()
         {
-            OnSetPathEvent = null;
-            OnSetObstacleEvent = null;
+            meshRenderer.material.color = Color.white;
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        private void OnDestroy()
         {
-            SetObstacle();
+            OnSetObstacleEvent = null;
         }
 
         public void OnTracking() => meshRenderer.material.color = Color.yellow;
@@ -57,7 +49,10 @@ namespace MapSystem
                 tower.SetParent(null);
                 placedObejct.SetParent(exchangeNode, true);
             }
-            tower.SetParent(transform, true, tower.OnSnapEvent);
+            tower.SetParent(transform, true, true);
+            tower.OnReleaseEvent += () => OnSetNonObstacleEvent?.Invoke(x, y);
+            // 장애물 설정
+            OnSetObstacleEvent?.Invoke(x, y);
         }
     }
 }
