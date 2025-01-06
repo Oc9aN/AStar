@@ -43,7 +43,7 @@ namespace UnitSystem
             path.ForEach((v) =>
             {
                 v.y += YMargin;
-                sequence.Append(transform.DOMove(v, data.MoveSpeed));
+                sequence.Append(transform.DOMove(v, data.MoveSpeed).SetEase(Ease.Linear));
             });
 
             sequence.Play();
