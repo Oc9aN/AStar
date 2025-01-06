@@ -53,33 +53,34 @@ namespace MapSystem
 
             // Vector3 리스트로 UnitManager에게 전달
             unitManager.Path = GetVectorPath(path);
-        }
 
-        private void ResetPath(List<Node> path) => path.ForEach((n) =>
-                        {
-                            GameObject node = mapGenerator.GetNode(n.x, n.y);
-                            NodeObject nodeObject = node.GetComponent<NodeObject>();
-                            nodeObject.SetNormal(); // 기본으로 복구
-                        });
-
-        private void ShowPath(List<Node> path) => path.ForEach((n) =>
-                        {
-                            Debug.Log(n.x + ", " + n.y);
-                            GameObject node = mapGenerator.GetNode(n.x, n.y);
-                            NodeObject nodeObject = node.GetComponent<NodeObject>();
-                            nodeObject.SetPath(); // 길로 선정
-                        });
-
-        private List<Vector3> GetVectorPath(List<Node> path)
-        {
-            List<Vector3> vectorPath = new();
-            path.ForEach((n) =>
-                        {
-                            GameObject node = mapGenerator.GetNode(n.x, n.y);
-                            vectorPath.Add(node.transform.position);
-                        });
-            vectorPath.Reverse(); // 리스트를 뒤집음
-            return vectorPath;
+            // 길 초기화
+            void ResetPath(List<Node> path) => path.ForEach((n) =>
+                            {
+                                GameObject node = mapGenerator.GetNode(n.x, n.y);
+                                NodeObject nodeObject = node.GetComponent<NodeObject>();
+                                nodeObject.SetNormal(); // 기본으로 복구
+                            });
+            // 길 표시
+            void ShowPath(List<Node> path) => path.ForEach((n) =>
+                            {
+                                Debug.Log(n.x + ", " + n.y);
+                                GameObject node = mapGenerator.GetNode(n.x, n.y);
+                                NodeObject nodeObject = node.GetComponent<NodeObject>();
+                                nodeObject.SetPath(); // 길로 선정
+                            });
+            // 위치 리스트 반환
+            List<Vector3> GetVectorPath(List<Node> path)
+            {
+                List<Vector3> vectorPath = new();
+                path.ForEach((n) =>
+                            {
+                                GameObject node = mapGenerator.GetNode(n.x, n.y);
+                                vectorPath.Add(node.transform.position);
+                            });
+                vectorPath.Reverse(); // 리스트를 뒤집음
+                return vectorPath;
+            }
         }
     }
 }

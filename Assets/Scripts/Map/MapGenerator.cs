@@ -1,11 +1,12 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace MapSystem
 {
     public class MapGenerator : MonoBehaviour
     {
-        public event Action<Node[,]> OnMapModified;
+        public event UnityAction<Node[,]> OnMapModified;
         // 노드
         [Header("노드 오브젝트")]
         [SerializeField] GameObject prefab;
@@ -64,7 +65,7 @@ namespace MapSystem
             map[x, y].isObstacle = false;
         }
 
-        void DestroyAllObjects()
+        private void DestroyAllObjects()
         {
             if (objects == null)
                 return;
