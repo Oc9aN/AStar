@@ -35,6 +35,7 @@ namespace MapSystem
         private void OnDestroy()
         {
             OnSetObstacleEvent = null;
+            OnSetNonObstacleEvent = null;
         }
 
         public void OnTracking() => meshRenderer.material.color = Color.yellow;
@@ -47,9 +48,9 @@ namespace MapSystem
                 IPlaceable placedObejct = transform.GetChild(0).GetComponent<IPlaceable>();
                 Transform exchangeNode = tower.GetParent();
                 tower.SetParent(null);
-                placedObejct.SetParent(exchangeNode, true);
+                placedObejct.SetParent(exchangeNode);
             }
-            tower.SetParent(transform, true, true);
+            tower.SetParent(transform, true);
             tower.OnReleaseEvent += () => OnSetNonObstacleEvent?.Invoke(x, y);
             // 장애물 설정
             OnSetObstacleEvent?.Invoke(x, y);

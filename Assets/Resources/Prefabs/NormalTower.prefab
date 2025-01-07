@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3213784137314752638}
   - component: {fileID: -459789572042200205}
   m_Layer: 0
-  m_Name: Cylinder
+  m_Name: NormalTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

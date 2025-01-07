@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c82565cab3b366459912f127bd1d645, type: 3}
   m_Name: NormalUnit
   m_EditorClassIdentifier: 
-  hp: 10
+  hp: 5
   damage: 0
   moveSpeed: 2
+  rewardMoney: 20

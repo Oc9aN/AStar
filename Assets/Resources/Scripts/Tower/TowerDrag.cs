@@ -13,11 +13,9 @@ namespace TowerSystem
     {
         [SerializeField] float yMargin;
         public event UnityAction<IPlaceable> TrySnapAction;
-        public event UnityAction OnSnapEvent;
         public event UnityAction OnReleaseEvent;
         public IParentable snapNode { get; set; }
         public Transform GetParent() => transform.parent;
-
         private Tower tower = null;
         private Tower Tower => tower ??= GetComponent<Tower>();
 
@@ -25,12 +23,13 @@ namespace TowerSystem
         {
             TrySnapAction += (IPlaceable tower) => snapNode?.SetPlaceOnThis(tower);
             TrySnapAction += (_) => snapNode?.OnEndTarcking();
-
-            OnSnapEvent += Tower.ActiveTower;
         }
 
         public void OnDrag(PointerEventData eventData)
         {
+            // 타워 비활성화
+            Tower.InActiveTower();
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Vector3 rayPosition = ray.GetPoint((2f - ray.origin.y) / ray.direction.y);
 
@@ -42,15 +41,10 @@ namespace TowerSystem
         public void OnEndDrag(PointerEventData eventData)
         {
             // 위치 확인 후 배치 또는 복귀
-            TrySnapAction.Invoke(this);
+            TrySnapAction?.Invoke(this);
         }
 
-        public void SnapToPlace(IParentable snap)
-        {
-            snapNode = snap;
-            TrySnapAction.Invoke(this);
-        }
-
+        // 하단 노드를 트래킹
         private void BottomTracking()
         {
             Debug.DrawRay(transform.position, Vector3.down, Color.yellow);
@@ -73,14 +67,14 @@ namespace TowerSystem
                 snapNode?.OnEndTarcking();
         }
 
-        public void SetParent(Transform parent, bool isMove = false, bool isSnapEvent = false)
+        public void SetParent(Transform parent, bool active = false)
         {
             // 부모가 바뀐건 이전 노드가 놓아줬다는 뜻
             OnReleaseEvent?.Invoke();
             OnReleaseEvent = null;
             transform.SetParent(parent);
-            if (isSnapEvent) OnSnapEvent?.Invoke();
-            if (isMove)
+            if (active) Tower.ActiveTower();
+            if (parent != null)
             {
                 Vector3 newPosition = transform.parent.position;
                 newPosition.y += yMargin;
@@ -91,6 +85,7 @@ namespace TowerSystem
         private void OnDestroy()
         {
             TrySnapAction = null;
+            OnReleaseEvent = null;
         }
     }
 }

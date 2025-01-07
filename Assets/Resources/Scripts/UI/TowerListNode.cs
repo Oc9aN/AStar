@@ -20,8 +20,8 @@ public class TowerListNode : MonoBehaviour, IParentable
             IPlaceable placedObejct = transform.GetChild(0).GetComponent<IPlaceable>();
             Transform exchangeNode = tower.GetParent();
             tower.SetParent(null);
-            placedObejct.SetParent(exchangeNode, true);
+            placedObejct.SetParent(exchangeNode);
         }
-        tower.SetParent(transform, true);
+        tower.SetParent(transform);
     }
 }

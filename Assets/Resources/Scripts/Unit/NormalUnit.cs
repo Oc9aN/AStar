@@ -3,22 +3,25 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace UnitSystem
 {
     public class NormalUnit : MonoBehaviour, IUnit
     {
+        public event UnityAction OnRemoveEvent;
         [SerializeField] private UnitData data;
         [SerializeField] private Image HpImage;
         [SerializeField, ReadOnly] private int hp;
-
+        public int rewardMoney { get; set; }
         private Canvas hpCanvas = null;
         private Canvas HpCanvas => hpCanvas ??= GetComponentInChildren<Canvas>();
 
         private void Awake()
         {
             hp = data.Hp;
+            rewardMoney = data.RewardMoney;
         }
 
         private void Update()
@@ -53,7 +56,11 @@ namespace UnitSystem
         {
             hp -= damage;
             float hpPercent = hp / (float)data.Hp;
-            if (hpPercent <= 0) hpPercent = 0f; // 사망
+            if (hpPercent <= 0)
+            {
+                hpPercent = 0f; // 사망
+                OnRemoveEvent?.Invoke();
+            }
             Vector3 newScale = Vector3.one;
             newScale.x = hpPercent;
             HpImage.transform.localScale = newScale;
