@@ -1,28 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace UnitSystem
 {
-    public class UnitManager : MonoBehaviour
+    public class UnitManager : MonoBehaviour, IAddableMoney
     {
         // 맵으로부터 path를 받아 각 유닛에게 전달
-        private IGameManager gameManager;
+        public event UnityAction<int> OnAddMoney;
+
         [SerializeField] GameObject prefab;
         [SerializeField] float YMargin;
         private List<IUnit> unitList = new();
         private List<Vector3> path = new();
         public List<Vector3> Path { set { path = value; } }
-
-        public IGameManager GameManager
-        {
-            get { return gameManager; }
-        }
-
-        public void Init(IGameManager gameManager)
-        {
-            this.gameManager = gameManager;
-        }
 
         [ContextMenu("유닛 생성")]
         public void CreateUnit(string type)
@@ -44,7 +36,7 @@ namespace UnitSystem
             MoveUnitByPath(unitObject);
 
             // 제거 이벤트 등록
-            unitObject.OnRemoveEvent += () => gameManager.AddMoney(unitObject.rewardMoney);
+            unitObject.OnRemoveEvent += () => OnAddMoney?.Invoke(unitObject.rewardMoney);
         }
 
         public void MoveUnitByPath(IUnit unit)

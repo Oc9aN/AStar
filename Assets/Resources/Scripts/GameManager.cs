@@ -3,28 +3,18 @@ using System.Collections.Generic;
 using TowerSystem;
 using UnitSystem;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
-public interface IGameManager
+public class GameManager : MonoBehaviour
 {
-    public bool TrySpendMoney(int value);
-    public void AddMoney(int value);
-}
-
-public class GameManager : MonoBehaviour, IGameManager
-{
-    // 하위 매니저
-    private UnitManager unitManager;
-    private UserManager userManager;
-    private UIManager uiManager;
-    private TowerManager towerManager;
+    // 이벤트
+    private event UnityAction<TypeTierData> OnCreateTower;
+    private event UnityAction<string> OnCreateUnit;
 
     // JSON 데이터
     private StageData stageData;
     private TypeTierData typeTierData;
-
-    // 게임 데이터
-    private int towerLevel = 0;
 
     // 버튼 -> 스크립트로 이벤트 추가, 한번에 버튼 이벤트를 확인하기 위함
     [SerializeField] Button createTowerButton;
@@ -38,21 +28,26 @@ public class GameManager : MonoBehaviour, IGameManager
         InitJsonData();
     }
 
-    // 하위 매니저 초기화
+    // 하위 매니저로 이벤트 초기화
     private void InitManagers()
     {
-        uiManager = GetComponentInChildren<UIManager>();
+        var uiManager = GetComponentInChildren<UIManager>();
 
-        userManager = GetComponentInChildren<UserManager>();
+        var userManager = GetComponentInChildren<UserManager>();
 
-        unitManager = GetComponentInChildren<UnitManager>();
-        unitManager.Init(this);
+        var randomManager = GetComponentInChildren<RandomManager>();
 
-        towerManager = GetComponentInChildren<TowerManager>();
-        towerManager.Init(this);
+        var unitManager = GetComponentInChildren<UnitManager>();
+
+        var towerManager = GetComponentInChildren<TowerManager>();
 
         // 상호 이벤트 연결
         uiManager.SubscribeMoneyUpdates(userManager);   // user의 돈 변화를 감지
+        userManager.SubscribeMoneyAdd(unitManager);     // Unit이 사망하면 ADD 이벤트 등록
+        userManager.SubscribeMoneyUse(towerManager);
+
+        OnCreateTower += towerManager.CreateTowerByRandom;
+        OnCreateUnit += unitManager.CreateUnit;
     }
 
     // 버튼 이벤트 추가
@@ -84,7 +79,7 @@ public class GameManager : MonoBehaviour, IGameManager
             {
                 yield return new WaitForSeconds(monster.delay);
                 Debug.Log($"생성 -> Type: {monster.type}");
-                unitManager.CreateUnit(monster.type);
+                OnCreateUnit?.Invoke(monster.type);
             }
             yield return new WaitForSeconds(wave.waveDelay);
         }
@@ -92,28 +87,11 @@ public class GameManager : MonoBehaviour, IGameManager
     }
     #endregion
 
-    #region Money
-    public bool TrySpendMoney(int value)
-    {
-        // 돈 출금
-        return userManager.WithdrawMoneyEvent(value);
-    }
-
-    public void AddMoney(int value)
-    {
-        // 돈 입금
-        userManager.DepositMoneyEvent(value);
-    }
-
-    public void UpdateMoneyUI(int value) => uiManager.UpdateMoneyUI(value);
-    #endregion
-
     #region Tower
     public void CreateTower()
     {
         // 랜덤으로 타워 생성, 타입과 티어로 구별, 티어는 0~4까지, 티어가 낮을수록 강한것
-        (string type, int tier) = RandomManager.RandomTower(typeTierData.type, typeTierData.tierPercent[towerLevel].percent);
-        towerManager.CreateTower("type", tier);
+        OnCreateTower?.Invoke(typeTierData);
     }
     #endregion
 }

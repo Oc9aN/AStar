@@ -17,8 +17,8 @@ namespace TowerSystem
 
         protected GameObject target;
 
-        private Coroutine findingTargetCoroutine;
-        private Coroutine RangeCheckCoroutine;
+        protected Coroutine findingTargetCoroutine;
+        protected Coroutine RangeCheckCoroutine;
         private Coroutine AttackCoroutine;
 
         public void ActiveTower() => RangeCheckCoroutine = StartCoroutine(GetTarget());
@@ -29,11 +29,10 @@ namespace TowerSystem
 
         private IEnumerator RangeCheck()
         {
-            Debug.Log($"{transform.name} 타워 활성화");
             if (target == null) yield break;
 
             float distance = Vector3.Distance(transform.position, target.transform.position);
-            while (distance < data.Radius)  // 사거리 체크
+            while (distance < data.Radius && target != null)  // 사거리 체크
             {
                 Debug.DrawLine(transform.position, target.transform.position, Color.red);
                 distance = Vector3.Distance(transform.position, target.transform.position);
@@ -49,6 +48,7 @@ namespace TowerSystem
 
         protected IEnumerator GetTarget()
         {
+            Debug.Log($"{transform.name} 타워 활성화");
             List<Collider> hitColliders = new();
 
             while (hitColliders.Count <= 0)

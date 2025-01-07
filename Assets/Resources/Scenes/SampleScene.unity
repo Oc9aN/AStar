@@ -958,7 +958,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1894681419}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MapSystem.MapView, Assembly-CSharp
         m_MethodName: CreateMap
         m_Mode: 1
@@ -1188,7 +1188,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapGenerator: {fileID: 1795369846}
-  mapView: {fileID: 1894681419}
   uiInputView: {fileID: 911649345}
   unitManager: {fileID: 64482572}
 --- !u!1 &576704169
@@ -2075,6 +2074,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moneyUI: {fileID: 625298254}
+  xSizeText: {fileID: 1365884650}
+  ySizeText: {fileID: 97395557}
+  xStart: {fileID: 1895749250}
+  yStart: {fileID: 1981999639}
+  xDest: {fileID: 1252294948}
+  yDest: {fileID: 1608200235}
 --- !u!1 &798475928
 GameObject:
   m_ObjectHideFlags: 0
@@ -2103,7 +2108,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 971523234}
+  - {fileID: 911649343}
   - {fileID: 540629780}
   - {fileID: 1795369845}
   m_Father: {fileID: 1515812304}
@@ -2138,8 +2143,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 971523234}
-  m_RootOrder: 1
+  m_Father: {fileID: 798475929}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &911649345
 MonoBehaviour:
@@ -2260,39 +2265,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_MaxRayIntersections: 0
---- !u!1 &971523233
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 971523234}
-  m_Layer: 0
-  m_Name: Views
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &971523234
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 971523233}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1894681418}
-  - {fileID: 911649343}
-  m_Father: {fileID: 798475929}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1068983544
 GameObject:
   m_ObjectHideFlags: 0
@@ -4218,7 +4190,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1894681419}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PathView, Assembly-CSharp
         m_MethodName: RequestPath
         m_Mode: 1
@@ -4571,50 +4543,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!1 &1894681417
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1894681418}
-  - component: {fileID: 1894681419}
-  m_Layer: 0
-  m_Name: MapView
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1894681418
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1894681417}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 971523234}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1894681419
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1894681417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2081bce3c50e43a449d17d4898d5c6c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1895749248
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,28 +1,28 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TowerSystem
 {
-    public class TowerManager : MonoBehaviour
+    public class TowerManager : MonoBehaviour, ISpendableMoney
     {
+        public event Func<int, bool> OnSpendMoney;
         [SerializeField] int towerCost = 50;
         [SerializeField] Tower normalTower;
         [SerializeField] TowerList towerList;
-        private IGameManager gameManager;
-        public IGameManager GameManager
+
+        public void CreateTowerByRandom(TypeTierData typeTierData)
         {
-            get { return gameManager; }
+            (string type, int tier) = RandomManager.RandomTower(typeTierData.types, typeTierData.tierPercents[0].percents);
+            CreateTower("type", tier);
         }
 
-        public void Init(IGameManager gameManager)
+        private void CreateTower(string type, int tier)
         {
-            this.gameManager = gameManager;
-        }
+            if (!OnSpendMoney(towerCost)) return;
 
-        public void CreateTower(string type, int tier)
-        {
-            if (!gameManager.TrySpendMoney(towerCost)) return;
             Tower tower = null;
             switch (type)
             {

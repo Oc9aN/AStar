@@ -6,12 +6,11 @@ namespace TowerSystem
 {
     public class NormalTower : Tower
     {
-        //TODO: 이벤트 OnDestroy에서 놓아주기
         protected override IEnumerator Attack()
         {
             if (target == null) yield break;
             IUnit targetUnit = target.GetComponent<IUnit>();
-            while (true)
+            while (true && targetUnit != null)
             {
                 // 공격
                 targetUnit.OnDamaged(data.Damage);

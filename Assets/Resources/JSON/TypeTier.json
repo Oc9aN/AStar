@@ -1,7 +1,7 @@
 {
-    "type": ["Noraml"],
-    "tierPercent": [
-        { "percent": [10, 20, 30, 40] },
-        { "percent": [10, 20, 30, 40] }
+    "types": ["Noraml"],
+    "tierPercents": [
+        { "percents": [10, 20, 30, 40] },
+        { "percents": [10, 20, 30, 40] }
     ]
 }

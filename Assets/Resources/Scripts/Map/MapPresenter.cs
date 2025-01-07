@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace MapSystem
@@ -7,7 +6,6 @@ namespace MapSystem
     public class MapPresenter : MonoBehaviour
     {
         [SerializeField] MapGenerator mapGenerator;
-        [SerializeField] MapView mapView;
         [SerializeField] MapUIInput uiInputView;
         [SerializeField] UnitSystem.UnitManager unitManager;
         private AStar aStar;
@@ -22,8 +20,6 @@ namespace MapSystem
         private void EventSetter()
         {
             mapGenerator.OnMapModified += SetMap;
-            mapView.OnPathRequested += OnPathRequested;
-            mapView.OnCreateMapRequested += CreateMap;
         }
 
         private void Start()
@@ -33,7 +29,9 @@ namespace MapSystem
 
         private void SetMap(Node[,] map)
         {
+            // 맵이 바뀔때마다 경로 재탐색
             aStar.SetMap(map);
+            OnPathRequested();
         }
 
         private void CreateMap()
