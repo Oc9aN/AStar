@@ -8,7 +8,7 @@ namespace MapSystem
     {
         [SerializeField] MapGenerator mapGenerator;
         [SerializeField] MapView mapView;
-        [SerializeField] UIInputView uiInputView;
+        [SerializeField] MapUIInput uiInputView;
         [SerializeField] UnitSystem.UnitManager unitManager;
         private AStar aStar;
         private List<Node> path = null;

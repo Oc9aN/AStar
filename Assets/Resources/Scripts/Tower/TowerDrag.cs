@@ -12,18 +12,11 @@ namespace TowerSystem
     public class TowerDrag : MonoBehaviour, IDragHandler, IEndDragHandler, IPlaceable
     {
         [SerializeField] float yMargin;
-        public event UnityAction<IPlaceable> TrySnapAction;
         public event UnityAction OnReleaseEvent;
         public IParentable snapNode { get; set; }
         public Transform GetParent() => transform.parent;
         private Tower tower = null;
         private Tower Tower => tower ??= GetComponent<Tower>();
-
-        private void Awake()
-        {
-            TrySnapAction += (IPlaceable tower) => snapNode?.SetPlaceOnThis(tower);
-            TrySnapAction += (_) => snapNode?.OnEndTarcking();
-        }
 
         public void OnDrag(PointerEventData eventData)
         {
@@ -41,7 +34,8 @@ namespace TowerSystem
         public void OnEndDrag(PointerEventData eventData)
         {
             // 위치 확인 후 배치 또는 복귀
-            TrySnapAction?.Invoke(this);
+            snapNode?.SetPlaceOnThis(this);
+            snapNode?.OnEndTarcking();
         }
 
         // 하단 노드를 트래킹
@@ -57,9 +51,9 @@ namespace TowerSystem
                 {
                     if (snapNode != trackingNode)
                     {
-                        snapNode?.OnEndTarcking();
+                        snapNode?.OnEndTarcking();  // 이전 노드가 있으면 End실행
                         snapNode = trackingNode;
-                        trackingNode.OnTracking();
+                        snapNode.OnTracking();      // 새로운 노드로 다시 Tracking
                     }
                 }
             }
@@ -84,7 +78,6 @@ namespace TowerSystem
 
         private void OnDestroy()
         {
-            TrySnapAction = null;
             OnReleaseEvent = null;
         }
     }

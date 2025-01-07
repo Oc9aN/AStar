@@ -60,10 +60,16 @@ namespace UnitSystem
             {
                 hpPercent = 0f; // 사망
                 OnRemoveEvent?.Invoke();
+                Destroy(gameObject);
             }
             Vector3 newScale = Vector3.one;
             newScale.x = hpPercent;
             HpImage.transform.localScale = newScale;
+        }
+
+        private void OnDestroy()
+        {
+            OnRemoveEvent = null;
         }
     }
 }

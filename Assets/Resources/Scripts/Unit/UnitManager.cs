@@ -27,7 +27,7 @@ namespace UnitSystem
         [ContextMenu("유닛 생성")]
         public void CreateUnit(string type)
         {
-            if (path == null) return;
+            if (path == null || path.Count < 1) return;
             // 유닛 생성
             IUnit unitObject = null;
             switch (type)

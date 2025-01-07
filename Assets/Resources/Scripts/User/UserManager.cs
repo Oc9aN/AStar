@@ -6,18 +6,12 @@ using UnityEngine.Events;
 
 public class UserManager : MonoBehaviour
 {
+    public event UnityAction<int> OnMoneyChanged;
     private int money = 100;
-    private IGameManager gameManager;
-    public IGameManager GameManager
-    {
-        get { return gameManager; }
-    }
 
-    public void Init(IGameManager gameManager)
+    private void Start()
     {
-        this.gameManager = gameManager;
-        // MoneyUI 초기화
-        this.gameManager.UpdateMoneyUI(money);
+        OnMoneyChanged?.Invoke(money);
     }
 
     /// <summary>
@@ -26,10 +20,10 @@ public class UserManager : MonoBehaviour
     /// <param name="value">금액</param>
     public bool WithdrawMoneyEvent(int value)
     {
-        if (money - value > 0)
+        if (money - value >= 0)
         {
             money -= value;
-            gameManager.UpdateMoneyUI(money);
+            OnMoneyChanged?.Invoke(money);
             return true;
         }
         else
@@ -45,6 +39,6 @@ public class UserManager : MonoBehaviour
     public void DepositMoneyEvent(int value)
     {
         money += value;
-        gameManager.UpdateMoneyUI(money);
+        OnMoneyChanged?.Invoke(money);
     }
 }
