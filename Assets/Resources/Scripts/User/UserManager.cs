@@ -14,10 +14,17 @@ public interface IAddableMoney
 {
     public event UnityAction<int> OnAddMoney;
 }
+public interface ICausingDamage
+{
+    public event UnityAction<int> CausingDamage;
+}
 public class UserManager : MonoBehaviour
 {
     public event UnityAction<int> OnMoneyChanged;
+    public event UnityAction<int, int> OnHpChanged;
+    private const int MAX_HP = 100;
     private int money = 100;
+    private int hp = MAX_HP;
 
     public void SubscribeMoneyAdd(IAddableMoney addable)
     {
@@ -29,9 +36,15 @@ public class UserManager : MonoBehaviour
         spendable.OnSpendMoney += WithdrawMoneyEvent;
     }
 
+    public void SubscribeHpDamaged(ICausingDamage causingDamage)
+    {
+        causingDamage.CausingDamage += HpDamaged;
+    }
+
     private void Start()
     {
         OnMoneyChanged?.Invoke(money);
+        OnHpChanged?.Invoke(hp, MAX_HP);
     }
 
     /// <summary>
@@ -60,5 +73,17 @@ public class UserManager : MonoBehaviour
     {
         money += value;
         OnMoneyChanged?.Invoke(money);
+    }
+
+    public void HpDamaged(int value)
+    {
+        hp -= value;
+        OnHpChanged?.Invoke(hp, MAX_HP);
+    }
+
+    private void OnDestroy()
+    {
+        OnMoneyChanged = null;
+        OnHpChanged = null;
     }
 }

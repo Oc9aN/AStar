@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: NormalUnit
   m_EditorClassIdentifier: 
   hp: 5
-  damage: 0
+  damage: 10
   moveSpeed: 2
   rewardMoney: 20

@@ -16,7 +16,7 @@ namespace TowerSystem
         public void CreateTowerByRandom(TypeTierData typeTierData)
         {
             (string type, int tier) = RandomManager.RandomTower(typeTierData.types, typeTierData.tierPercents[0].percents);
-            CreateTower("type", tier);
+            CreateTower(type, tier);
         }
 
         private void CreateTower(string type, int tier)

@@ -6,24 +6,28 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] TMP_Text moneyUI;
-    [SerializeField] TMP_Text xSizeText;
+    [SerializeField] TMP_Text hpUI;         // 현재 체력
+    [SerializeField] TMP_Text moneyUI;      // 보유 금액
+    [SerializeField] TMP_Text xSizeText;    // 맵 크기
     [SerializeField] TMP_Text ySizeText;
-
-    [SerializeField] TMP_Text xStart;
+    [SerializeField] TMP_Text xStart;       // 시작 위치
     [SerializeField] TMP_Text yStart;
-
-    [SerializeField] TMP_Text xDest;
+    [SerializeField] TMP_Text xDest;        // 끝 위치
     [SerializeField] TMP_Text yDest;
-    public void SubscribeMoneyUpdates(UserManager userManager)
+    public void SubscribeUserDataUpdate(UserManager userManager)
     {
         userManager.OnMoneyChanged += UpdateMoneyUI;
+        userManager.OnHpChanged += UpdateHpUI;
     }
 
-    public void UpdateMoneyUI(int value)
+    private void UpdateHpUI(int hp, int maxHP)
     {
-        // MoneyUI 업데이트
-        moneyUI.text = value.ToString();
+        hpUI.text = $"{hp} / {maxHP}";
+    }
+
+    private void UpdateMoneyUI(int money)
+    {
+        moneyUI.text = money.ToString();
     }
 
     public void UpdateSizeUI(int xSize, int ySize)

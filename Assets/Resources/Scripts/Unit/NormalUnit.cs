@@ -11,17 +11,18 @@ namespace UnitSystem
     public class NormalUnit : MonoBehaviour, IUnit
     {
         public event UnityAction OnRemoveEvent;
-        [SerializeField] private UnitData data;
+        public event UnityAction OnEndEvent;
+
+        [SerializeField] UnitData unitData;
+        public UnitData data { get { return unitData; } set { unitData = value; } }
         [SerializeField] private Image HpImage;
         [SerializeField, ReadOnly] private int hp;
-        public int rewardMoney { get; set; }
         private Canvas hpCanvas = null;
         private Canvas HpCanvas => hpCanvas ??= GetComponentInChildren<Canvas>();
 
         private void Awake()
         {
             hp = data.Hp;
-            rewardMoney = data.RewardMoney;
         }
 
         private void Update()
@@ -48,6 +49,8 @@ namespace UnitSystem
                 v.y += YMargin;
                 sequence.Append(transform.DOMove(v, data.MoveSpeed).SetEase(Ease.Linear));
             });
+
+            sequence.OnComplete(() => { OnEndEvent?.Invoke(); Destroy(gameObject); });
 
             sequence.Play();
         }

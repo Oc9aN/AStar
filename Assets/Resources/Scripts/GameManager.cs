@@ -42,8 +42,9 @@ public class GameManager : MonoBehaviour
         var towerManager = GetComponentInChildren<TowerManager>();
 
         // 상호 이벤트 연결
-        uiManager.SubscribeMoneyUpdates(userManager);   // user의 돈 변화를 감지
+        uiManager.SubscribeUserDataUpdate(userManager);   // user의 데이터 변화를 감지
         userManager.SubscribeMoneyAdd(unitManager);     // Unit이 사망하면 ADD 이벤트 등록
+        userManager.SubscribeHpDamaged(unitManager);
         userManager.SubscribeMoneyUse(towerManager);
 
         OnCreateTower += towerManager.CreateTowerByRandom;
