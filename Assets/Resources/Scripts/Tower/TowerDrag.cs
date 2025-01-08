@@ -8,15 +8,15 @@ using UnityEngine.EventSystems;
 
 namespace TowerSystem
 {
-    [RequireComponent(typeof(Tower))]
+    [RequireComponent(typeof(ITower))]
     public class TowerDrag : MonoBehaviour, IDragHandler, IEndDragHandler, IPlaceable
     {
         [SerializeField] float yMargin;
         public event UnityAction OnReleaseEvent;
         public IParentable snapNode { get; set; }
         public Transform GetParent() => transform.parent;
-        private Tower tower = null;
-        private Tower Tower => tower ??= GetComponent<Tower>();
+        private ITower tower = null;
+        private ITower Tower => tower ??= GetComponent<ITower>();
 
         public void OnDrag(PointerEventData eventData)
         {

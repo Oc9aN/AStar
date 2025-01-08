@@ -7,16 +7,12 @@ using UnityEngine;
 public class TowerList : MonoBehaviour
 {
     [SerializeField] GameObject grid;
-    [SerializeField] List<Tower> towers = new();
-    public List<Tower> Towers { private get { return towers; } set { towers = value; } }
     [SerializeField] float leftMargin = 0;
     [SerializeField] float rightMargin = 0;
     [SerializeField] float space = 0;
 
-    public void AddTowers(Tower tower)
+    public void AddTowers(IPlaceable tower)
     {
-        towers.Add(tower);
-
         // 하단에 타워 및 타워 발판 추가
         Vector3 firstPosition = transform.position;
         firstPosition.x += leftMargin;
@@ -25,14 +21,14 @@ public class TowerList : MonoBehaviour
         gridObject.transform.SetParent(transform);
 
         Vector3 setPositon = firstPosition;
-        setPositon.x += (space * (towers.Count - 1));
+        setPositon.x += space * transform.childCount;
         gridObject.transform.position = setPositon;
 
-        gridObject.GetComponent<IParentable>().SetPlaceOnThis(tower.GetComponent<TowerDrag>());
+        tower.SetParent(gridObject.transform);
         // 타워 갯수에 맞게 ScrollView 조정
         RectTransform rectTransform = transform as RectTransform;
 
-        Vector3 lastPosition = towers[towers.Count - 1].transform.position;
+        Vector3 lastPosition = gridObject.transform.position;
         lastPosition.x += rightMargin;
         Vector2 listPosition = rectTransform.InverseTransformPoint(lastPosition);
 

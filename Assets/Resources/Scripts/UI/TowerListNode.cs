@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class TowerListNode : MonoBehaviour, IParentable
 {
-    public Tower placedObejct { get; set; }
     private MeshRenderer meshRenderer = null;
     private MeshRenderer MeshRenderer => meshRenderer ??= GetComponent<MeshRenderer>();
     public void OnTracking() => MeshRenderer.material.color = Color.yellow;

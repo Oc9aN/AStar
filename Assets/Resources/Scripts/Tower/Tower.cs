@@ -5,7 +5,10 @@ using UnityEngine;
 
 namespace TowerSystem
 {
-    public class Tower : MonoBehaviour
+    /// <summary>
+    /// 단일 타겟 공격 타워
+    /// </summary>
+    public class Tower : MonoBehaviour, ITower
     {
         // 가장 가까운 target을 찾고 범위를 나갈 때까지 공격, 이후 다시 반복
         [SerializeField] protected TowerData data;
@@ -25,9 +28,9 @@ namespace TowerSystem
 
         public void InActiveTower() => StopAllCoroutines();
 
-        protected virtual IEnumerator Attack() { yield break; }
+        public virtual IEnumerator Attack() { yield break; }
 
-        private IEnumerator RangeCheck()
+        public IEnumerator RangeCheck()
         {
             if (target == null) yield break;
 
@@ -46,7 +49,7 @@ namespace TowerSystem
             yield break;
         }
 
-        protected IEnumerator GetTarget()
+        public IEnumerator GetTarget()
         {
             Debug.Log($"{transform.name} 타워 활성화");
             List<Collider> hitColliders = new();

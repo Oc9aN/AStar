@@ -6,7 +6,7 @@ namespace TowerSystem
 {
     public class NormalTower : Tower
     {
-        protected override IEnumerator Attack()
+        public override IEnumerator Attack()
         {
             if (target == null) yield break;
             IUnit targetUnit = target.GetComponent<IUnit>();

@@ -10,7 +10,7 @@ namespace TowerSystem
     {
         public event Func<int, bool> OnSpendMoney;
         [SerializeField] int towerCost = 50;
-        [SerializeField] Tower normalTower;
+        [SerializeField] TowerDrag normalTower; // 드래그가 가능한 타워
         [SerializeField] TowerList towerList;
 
         public void CreateTowerByRandom(TypeTierData typeTierData)
@@ -23,7 +23,7 @@ namespace TowerSystem
         {
             if (!OnSpendMoney(towerCost)) return;
 
-            Tower tower = null;
+            IPlaceable tower = null;
             switch (type)
             {
                 case "Normal":
