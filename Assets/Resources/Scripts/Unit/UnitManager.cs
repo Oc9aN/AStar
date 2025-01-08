@@ -15,8 +15,7 @@ namespace UnitSystem
         [SerializeField] float YMargin;
         private List<IUnit> unitList = new();
         // 맵으로부터 path를 받아 각 유닛에게 전달
-        private List<Vector3> path = new();
-        public List<Vector3> Path { set { path = value; } }
+        public List<Vector3> path { private get; set; }
 
         [ContextMenu("유닛 생성")]
         public void CreateUnit(string type)
@@ -35,16 +34,11 @@ namespace UnitSystem
             }
             unitList.Add(unitObject);
 
-            MoveUnitByPath(unitObject);
+            unitObject.MoveByPath(path, YMargin);
 
             // 이벤트 등록
             unitObject.OnRemoveEvent += () => OnAddMoney?.Invoke(unitObject.data.RewardMoney);
             unitObject.OnEndEvent += () => CausingDamage?.Invoke(unitObject.data.Damage);
-        }
-
-        public void MoveUnitByPath(IUnit unit)
-        {
-            unit.MoveByPath(path, YMargin);
         }
     }
 }

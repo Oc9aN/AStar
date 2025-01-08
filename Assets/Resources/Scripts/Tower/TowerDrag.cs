@@ -34,8 +34,8 @@ namespace TowerSystem
         public void OnEndDrag(PointerEventData eventData)
         {
             // 위치 확인 후 배치 또는 복귀
-            snapNode?.SetPlaceOnThis(this);
             snapNode?.OnEndTarcking();
+            snapNode?.SetPlaceOnThis(this);
         }
 
         // 하단 노드를 트래킹

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using MapSystem;
 using TowerSystem;
 using UnitSystem;
 using UnityEngine;
@@ -20,6 +21,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] Button createTowerButton;
     [SerializeField] Button levelStartButton;
 
+    // 상태 변수
+    private bool isPlayable;
+
     #region Init
     private void Awake()
     {
@@ -35,6 +39,8 @@ public class GameManager : MonoBehaviour
 
         var userManager = GetComponentInChildren<UserManager>();
 
+        var mapManager = GetComponentInChildren<MapManager>();
+
         var randomManager = GetComponentInChildren<RandomManager>();
 
         var unitManager = GetComponentInChildren<UnitManager>();
@@ -47,6 +53,9 @@ public class GameManager : MonoBehaviour
         userManager.SubscribeHpDamaged(unitManager);
         userManager.SubscribeMoneyUse(towerManager);
 
+        mapManager.OnFindPath += (List<Vector3> path) => unitManager.path = path;
+        mapManager.OnFindPath += (List<Vector3> path) => isPlayable = path != null;
+
         OnCreateTower += towerManager.CreateTowerByRandom;
         OnCreateUnit += unitManager.CreateUnit;
     }
@@ -55,7 +64,7 @@ public class GameManager : MonoBehaviour
     private void AddButtonEvent()
     {
         createTowerButton.onClick.AddListener(CreateTower);
-        levelStartButton.onClick.AddListener(() => StartCoroutine(StartWave()));
+        levelStartButton.onClick.AddListener(() => { if (isPlayable) StartCoroutine(StartWave()); });
     }
 
     // JSON데이터 읽기
@@ -73,6 +82,7 @@ public class GameManager : MonoBehaviour
     #region Level
     private IEnumerator StartWave()
     {
+        // 경로가 있어야 함.
         foreach (var wave in stageData.waves)
         {
             Debug.Log($"웨이브 시작: {wave.wave}");

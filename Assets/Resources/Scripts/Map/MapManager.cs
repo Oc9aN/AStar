@@ -1,17 +1,24 @@
 using System.Collections.Generic;
+using UnitSystem;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace MapSystem
 {
-    public class MapPresenter : MonoBehaviour
+    [RequireComponent(typeof(MapGenerator))]
+    [RequireComponent(typeof(MapUIInput))]
+    public class MapManager : MonoBehaviour
     {
-        [SerializeField] MapGenerator mapGenerator;
-        [SerializeField] MapUIInput uiInputView;
-        [SerializeField] UnitSystem.UnitManager unitManager;
+        public event UnityAction<List<Vector3>> OnFindPath;
+        private MapGenerator mapGenerator;
+        private MapUIInput uiInputView;
         private AStar aStar;
         private List<Node> path = null;
         private void Awake()
         {
+            mapGenerator = GetComponent<MapGenerator>();
+            uiInputView = GetComponent<MapUIInput>();
+
             aStar = new AStar();
             // 이벤트 셋팅
             EventSetter();
@@ -47,10 +54,10 @@ namespace MapSystem
             (int startX, int startY) = uiInputView.GetStart();
             (int destX, int destY) = uiInputView.GetDest();
             path = aStar.Navigate(startX, startY, destX, destY);
-            ShowPath(path);
+            if (path != null) ShowPath(path);
 
-            // Vector3 리스트로 UnitManager에게 전달
-            unitManager.Path = GetVectorPath(path);
+            // Vector3 리스트로 이벤트 발생
+            OnFindPath?.Invoke(GetVectorPath(path));
 
             // 길 초기화
             void ResetPath(List<Node> path) => path.ForEach((n) =>
@@ -70,6 +77,8 @@ namespace MapSystem
             // 위치 리스트 반환
             List<Vector3> GetVectorPath(List<Node> path)
             {
+                if (path == null) return null;
+
                 List<Vector3> vectorPath = new();
                 path.ForEach((n) =>
                             {

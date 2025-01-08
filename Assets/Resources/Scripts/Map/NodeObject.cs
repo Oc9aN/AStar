@@ -15,9 +15,12 @@ namespace MapSystem
         public IPlaceable placedObejct { get; set; }
 
         private MeshRenderer meshRenderer;
+        private Color MainColor = Color.white;
+        private Color prevColor;
 
         private void Awake()
         {
+            prevColor = MainColor;
             placedObejct = null;
             meshRenderer = GetComponent<MeshRenderer>();
         }
@@ -29,7 +32,7 @@ namespace MapSystem
 
         public void SetNormal()
         {
-            meshRenderer.material.color = Color.white;
+            meshRenderer.material.color = MainColor;
         }
 
         private void OnDestroy()
@@ -38,8 +41,16 @@ namespace MapSystem
             OnSetNonObstacleEvent = null;
         }
 
-        public void OnTracking() => meshRenderer.material.color = Color.yellow;
-        public void OnEndTarcking() => meshRenderer.material.color = Color.white;
+        public void OnTracking()
+        {
+            prevColor = meshRenderer.material.color;
+            meshRenderer.material.color = Color.yellow;
+        }
+        public void OnEndTarcking()
+        {
+            meshRenderer.material.color = prevColor;
+            prevColor = MainColor;
+        }
         public void SetPlaceOnThis(IPlaceable tower)
         {
             if (transform.childCount > 0)
