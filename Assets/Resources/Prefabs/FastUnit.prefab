@@ -368,3 +368,4 @@ MonoBehaviour:
   unitData: {fileID: 11400000, guid: 240f541d8172a7849ac3f8899844a220, type: 2}
   HpImage: {fileID: 1034632217}
   hp: 0
+  YMargin: 1

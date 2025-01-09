@@ -13,8 +13,8 @@ namespace TowerSystem
             while (true && targetUnit != null)
             {
                 // 공격
-                targetUnit.OnDamaged(data.Damage);
-                yield return new WaitForSeconds(data.Delay);
+                targetUnit.OnDamaged(data[towerLevel].Damage);
+                yield return new WaitForSeconds(data[towerLevel].Delay);
             }
         }
     }

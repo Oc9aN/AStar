@@ -6,13 +6,19 @@ using UnityEngine.Events;
 
 namespace TowerSystem
 {
+    [RequireComponent(typeof(TowerList))]
     public class TowerManager : MonoBehaviour, ISpendableMoney
     {
         public event UnityAction<GameObject> OnCreateTower;
         public event Func<int, bool> OnSpendMoney;
         [SerializeField] int towerCost = 50;
         [SerializeField] TowerDrag normalTower; // 드래그가 가능한 타워
-        [SerializeField] TowerList towerList;
+        private TowerList towerList;
+
+        private void Awake()
+        {
+            towerList = GetComponent<TowerList>();
+        }
 
         public void TryCreateTowerByRandom(TypeTierData typeTierData)
         {

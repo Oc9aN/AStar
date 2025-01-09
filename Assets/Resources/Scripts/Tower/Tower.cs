@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 
 namespace TowerSystem
@@ -11,7 +12,8 @@ namespace TowerSystem
     public class Tower : MonoBehaviour, ITower
     {
         // 가장 가까운 target을 찾고 범위를 나갈 때까지 공격, 이후 다시 반복
-        [SerializeField] protected TowerData data;
+        [SerializeField] protected TowerData[] data;
+        [SerializeField, ReadOnly] protected int towerLevel = 0;
         private int targetLayer => 1 << LayerMask.NameToLayer("Unit");
 
         // 배치시 true
@@ -35,7 +37,7 @@ namespace TowerSystem
             if (target == null) yield break;
 
             float distance = Vector3.Distance(transform.position, target.transform.position);
-            while (distance < data.Radius && target != null)  // 사거리 체크
+            while (distance < data[towerLevel].Radius && target != null)  // 사거리 체크
             {
                 Debug.DrawLine(transform.position, target.transform.position, Color.red);
                 distance = Vector3.Distance(transform.position, target.transform.position);
@@ -56,8 +58,8 @@ namespace TowerSystem
 
             while (hitColliders.Count <= 0)
             {
-                hitColliders = Physics.OverlapSphere(transform.position, data.Radius, targetLayer)
-            .Where(collider => Vector3.Distance(transform.position, collider.transform.position) <= data.Radius).ToList();
+                hitColliders = Physics.OverlapSphere(transform.position, data[towerLevel].Radius, targetLayer)
+            .Where(collider => Vector3.Distance(transform.position, collider.transform.position) <= data[towerLevel].Radius).ToList();
                 yield return null;
             }
 
@@ -77,7 +79,7 @@ namespace TowerSystem
         {
             if (data == null) return;
             Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, data.Radius);
+            Gizmos.DrawWireSphere(transform.position, data[towerLevel].Radius);
         }
     }
 }
