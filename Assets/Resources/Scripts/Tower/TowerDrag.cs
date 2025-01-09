@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 namespace TowerSystem
 {
     [RequireComponent(typeof(ITower))]
-    public class TowerDrag : MonoBehaviour, IDragHandler, IEndDragHandler, IPlaceable
+    public class TowerDrag : MonoBehaviour, IDragHandler, IEndDragHandler, IPlaceable, IGameStateListener
     {
         [SerializeField] float yMargin;
         public event UnityAction OnReleaseEvent;
@@ -17,11 +17,15 @@ namespace TowerSystem
         public Transform GetParent() => transform.parent;
         private ITower tower = null;
         private ITower Tower => tower ??= GetComponent<ITower>();
+        private bool isActive;
+        private GameState gameState;
 
         public void OnDrag(PointerEventData eventData)
         {
+            if (isActive && gameState == GameState.ON_WAVE) return;
+
             // 타워 비활성화
-            Tower.InActiveTower();
+            ActiveTower(false);
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Vector3 rayPosition = ray.GetPoint((2f - ray.origin.y) / ray.direction.y);
@@ -33,6 +37,7 @@ namespace TowerSystem
 
         public void OnEndDrag(PointerEventData eventData)
         {
+            if (isActive) return;   // 활성화 된 객체는 드래그를 안한 셈
             // 위치 확인 후 배치 또는 복귀
             snapNode?.OnEndTarcking();
             snapNode?.SetPlaceOnThis(this);
@@ -67,7 +72,7 @@ namespace TowerSystem
             OnReleaseEvent?.Invoke();
             OnReleaseEvent = null;
             transform.SetParent(parent);
-            if (active) Tower.ActiveTower();
+            if (active) ActiveTower(true);
             if (parent != null)
             {
                 Vector3 newPosition = transform.parent.position;
@@ -76,9 +81,21 @@ namespace TowerSystem
             }
         }
 
+        private void ActiveTower(bool active)
+        {
+            if (active) Tower.ActiveTower();
+            else Tower.InActiveTower();
+            isActive = active;
+        }
+
         private void OnDestroy()
         {
             OnReleaseEvent = null;
+        }
+
+        public void UpdateGameState(GameState state)
+        {
+            gameState = state;
         }
     }
 }

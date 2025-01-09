@@ -79,7 +79,10 @@ public class GameManager : MonoBehaviour, IGameStateChanger
         userManager.SubscribeHpDamaged(unitManager);
         userManager.SubscribeMoneyUse(towerManager);        // tower가 user의 정보를 변경
 
-        mapManager.OnCreateMap += AddListener;              // 타워들을 리스너로 추가
+        mapManager.OnCreateMap += AddListener;              // 리스너로 추가
+        mapManager.OnCreateMap += (_) => NotifyListener();
+        towerManager.OnCreateTower += AddListener;
+        towerManager.OnCreateTower += (_) => NotifyListener();
 
         mapManager.OnFindPath += (List<Vector3> path) => unitManager.path = path;   // unit이 이동할 path 전달
         mapManager.OnFindPath += (List<Vector3> path) => isPlayable = path != null; // path가 null이 아니면 경로가 존재 = 플레이 가능
@@ -150,6 +153,12 @@ public class GameManager : MonoBehaviour, IGameStateChanger
     {
         IGameStateListener[] listenerArray = objArray.Select(n => n.GetComponent<IGameStateListener>()).ToArray();
         Listeners.AddRange(listenerArray);
+    }
+
+    public void AddListener(GameObject obj)
+    {
+        IGameStateListener listenerArray = obj.GetComponent<IGameStateListener>();
+        AddListener(listenerArray);
     }
 
     public void AddListener(IGameStateListener listener)

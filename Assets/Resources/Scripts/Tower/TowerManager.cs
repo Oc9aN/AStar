@@ -8,6 +8,7 @@ namespace TowerSystem
 {
     public class TowerManager : MonoBehaviour, ISpendableMoney
     {
+        public event UnityAction<GameObject> OnCreateTower;
         public event Func<int, bool> OnSpendMoney;
         [SerializeField] int towerCost = 50;
         [SerializeField] TowerDrag normalTower; // 드래그가 가능한 타워
@@ -23,22 +24,23 @@ namespace TowerSystem
         {
             if (!OnSpendMoney(towerCost)) return;
 
-            GameObject tower = null;
+            TowerDrag tower = null;
             switch (type)
             {
                 case "Normal":
                     switch (tier)
                     {
                         case 0:
-                            tower = Instantiate(normalTower, Camera.main.transform.position, Quaternion.identity).gameObject;
+                            tower = Instantiate(normalTower, Camera.main.transform.position, Quaternion.identity);
                             break;
                     }
                     break;
                 default:
-                    tower = Instantiate(normalTower, Camera.main.transform.position, Quaternion.identity).gameObject;
+                    tower = Instantiate(normalTower, Camera.main.transform.position, Quaternion.identity);
                     break;
             }
 
+            OnCreateTower?.Invoke(tower.gameObject);
             towerList.AddTowers(tower.GetComponent<IPlaceable>());
         }
     }

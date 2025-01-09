@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -14,7 +15,7 @@ namespace UnitSystem
 
         [SerializeField] GameObject prefab;
         [SerializeField] float YMargin;
-        private List<IUnit> unitList = new();
+        [SerializeField, ReadOnly] List<IUnit> unitList = new();
         // 맵으로부터 path를 받아 각 유닛에게 전달
         public List<Vector3> path { private get; set; }
 
