@@ -9,7 +9,7 @@ namespace UnitSystem
         public event UnityAction OnDestroyEvent;
         public event UnityAction OnDieEvent;
         public event UnityAction OnEndEvent;
-        public void MoveByPath(List<Vector3> path, float YMargin);
+        public void MoveByPath(List<Vector3> path);
         public void OnDamaged(int damage);
         public UnitData data { get; set; }
     }

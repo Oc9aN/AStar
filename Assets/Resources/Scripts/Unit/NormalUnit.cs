@@ -18,6 +18,7 @@ namespace UnitSystem
         public UnitData data { get { return unitData; } set { unitData = value; } }
         [SerializeField] private Image HpImage;
         [SerializeField, ReadOnly] private int hp;
+        [SerializeField] float YMargin;
         private Canvas hpCanvas = null;
         private Canvas HpCanvas => hpCanvas ??= GetComponentInChildren<Canvas>();
 
@@ -41,7 +42,7 @@ namespace UnitSystem
             HpCanvas.transform.rotation = Quaternion.LookRotation(dir, Vector3.back);
         }
 
-        public void MoveByPath(List<Vector3> path, float YMargin)
+        public void MoveByPath(List<Vector3> path)
         {
             // 패스전달 받아 따라 이동
             Sequence sequence = DOTween.Sequence();

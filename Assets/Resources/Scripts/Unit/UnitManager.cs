@@ -13,34 +13,30 @@ namespace UnitSystem
         public event UnityAction<int> CausingDamage;
         public event UnityAction OnRemoveAllUnitEvent;
 
+        private IUnitFactory unitFactory;
+
         [SerializeField] GameObject normal;
         [SerializeField] GameObject fast;
-        [SerializeField] float YMargin;
         [SerializeField, ReadOnly] List<IUnit> unitList = new();
         // 맵으로부터 path를 받아 각 유닛에게 전달
         public List<Vector3> path { private get; set; }
+
+        private void Awake()
+        {
+            unitFactory = new UnitFactory(normal, fast);
+        }
 
         [ContextMenu("유닛 생성")]
         public void CreateUnit(string type)
         {
             if (path == null || path.Count < 1) return;
-            // 유닛 생성
-            IUnit unitObject = null;
-            switch (type)
-            {
-                case "Normal":
-                    unitObject = Instantiate(normal, path[0], Quaternion.identity, transform).GetComponent<IUnit>();
-                    break;
-                case "Fast":
-                    unitObject = Instantiate(fast, path[0], Quaternion.identity, transform).GetComponent<IUnit>();
-                    break;
-                default:
-                    unitObject = Instantiate(normal, path[0], Quaternion.identity, transform).GetComponent<IUnit>();
-                    break;
-            }
+
+            // 팩토리를 사용하여 유닛 생성
+            IUnit unitObject = unitFactory.CreateUnit(type, path[0], transform);
+
             unitList.Add(unitObject);
 
-            unitObject.MoveByPath(path, YMargin);
+            unitObject.MoveByPath(path);
 
             // 이벤트 등록
             unitObject.OnDieEvent += () => OnAddMoney?.Invoke(unitObject.data.RewardMoney);
@@ -48,7 +44,7 @@ namespace UnitSystem
             unitObject.OnDestroyEvent += () =>
             {
                 unitList.Remove(unitObject);
-                if (unitList.Count <= 0) OnRemoveAllUnitEvent?.Invoke();    // 모든 유닛이 제거된 경우 = level 끝
+                if (unitList.Count <= 0) OnRemoveAllUnitEvent?.Invoke(); // 모든 유닛이 제거된 경우 = level 끝
             };
         }
     }
