@@ -8,16 +8,12 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] TMP_Text hpUI;         // 현재 체력
     [SerializeField] TMP_Text moneyUI;      // 보유 금액
-    [SerializeField] TMP_Text xSizeText;    // 맵 크기
-    [SerializeField] TMP_Text ySizeText;
-    [SerializeField] TMP_Text xStart;       // 시작 위치
-    [SerializeField] TMP_Text yStart;
-    [SerializeField] TMP_Text xDest;        // 끝 위치
-    [SerializeField] TMP_Text yDest;
+    [SerializeField] TMP_Text levelUI;      // 현재 레벨
     public void SubscribeUserDataUpdate(UserManager userManager)
     {
         userManager.OnMoneyChanged += UpdateMoneyUI;
         userManager.OnHpChanged += UpdateHpUI;
+        userManager.OnLevelChanged += UpdateLevelUI;
     }
 
     private void UpdateHpUI(int hp, int maxHP)
@@ -30,21 +26,8 @@ public class UIManager : MonoBehaviour
         moneyUI.text = money.ToString();
     }
 
-    public void UpdateSizeUI(int xSize, int ySize)
+    private void UpdateLevelUI(int level)
     {
-        xSizeText.text = xSize.ToString();
-        ySizeText.text = ySize.ToString();
-    }
-
-    public void UpdateStartUI(int x, int y)
-    {
-        xStart.text = x.ToString();
-        yStart.text = y.ToString();
-    }
-
-    public void UpdateDestUI(int x, int y)
-    {
-        xDest.text = x.ToString();
-        yDest.text = y.ToString();
+        levelUI.text = level.ToString();
     }
 }

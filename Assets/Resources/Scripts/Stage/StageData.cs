@@ -5,21 +5,26 @@ using UnityEngine;
 [Serializable]
 public class StageData
 {
-    public int stage; // 스테이지 번호
-    public List<Wave> waves; // 웨이브 리스트
+    public List<Level> levels;
+}
+
+[Serializable]
+public class Level
+{
+    public List<Wave> waves;
 }
 
 [Serializable]
 public class Wave
 {
-    public int wave; // 웨이브 번호
-    public List<Monster> monsters; // 몬스터 리스트
-    public float waveDelay; // 웨이브 딜레이 (초 단위)
+    public int wave;
+    public List<Monster> monsters;
+    public int waveDelay;
 }
 
 [Serializable]
 public class Monster
 {
-    public string type; // 몬스터 타입
-    public float delay; // 딜레이 (초 단위)
+    public string type;
+    public int delay;
 }

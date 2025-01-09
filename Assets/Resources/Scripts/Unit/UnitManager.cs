@@ -13,7 +13,8 @@ namespace UnitSystem
         public event UnityAction<int> CausingDamage;
         public event UnityAction OnRemoveAllUnitEvent;
 
-        [SerializeField] GameObject prefab;
+        [SerializeField] GameObject normal;
+        [SerializeField] GameObject fast;
         [SerializeField] float YMargin;
         [SerializeField, ReadOnly] List<IUnit> unitList = new();
         // 맵으로부터 path를 받아 각 유닛에게 전달
@@ -28,10 +29,13 @@ namespace UnitSystem
             switch (type)
             {
                 case "Normal":
-                    unitObject = Instantiate(prefab, path[0], Quaternion.identity, transform).GetComponent<IUnit>();
+                    unitObject = Instantiate(normal, path[0], Quaternion.identity, transform).GetComponent<IUnit>();
+                    break;
+                case "Fast":
+                    unitObject = Instantiate(fast, path[0], Quaternion.identity, transform).GetComponent<IUnit>();
                     break;
                 default:
-                    unitObject = Instantiate(prefab, path[0], Quaternion.identity, transform).GetComponent<IUnit>();
+                    unitObject = Instantiate(normal, path[0], Quaternion.identity, transform).GetComponent<IUnit>();
                     break;
             }
             unitList.Add(unitObject);

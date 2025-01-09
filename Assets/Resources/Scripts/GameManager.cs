@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,7 @@ public class GameManager : MonoBehaviour, IGameStateChanger
     // 이벤트
     private event UnityAction<TypeTierData> TryCreateTower;
     private event UnityAction<string> OnCreateUnit;
+    private event Func<int> GetLevel;
 
     // JSON 데이터
     private StageData stageData;
@@ -87,10 +89,19 @@ public class GameManager : MonoBehaviour, IGameStateChanger
         mapManager.OnFindPath += (List<Vector3> path) => unitManager.path = path;   // unit이 이동할 path 전달
         mapManager.OnFindPath += (List<Vector3> path) => isPlayable = path != null; // path가 null이 아니면 경로가 존재 = 플레이 가능
 
-        unitManager.OnRemoveAllUnitEvent += () => { if (GameState == GameState.END_WAVE) GameState = GameState.READY; };  // Ready로 변경
+        unitManager.OnRemoveAllUnitEvent += () =>
+        {
+            if (GameState == GameState.END_WAVE)
+            {
+                GameState = GameState.READY;
+                userManager.LevelUp();
+            }
+        };  // Ready로 변경
 
         TryCreateTower += towerManager.TryCreateTowerByRandom;
         OnCreateUnit += unitManager.CreateUnit;
+
+        GetLevel += userManager.GetLevel;
     }
 
     // 버튼 이벤트 추가
@@ -123,7 +134,7 @@ public class GameManager : MonoBehaviour, IGameStateChanger
     private IEnumerator StartWave()
     {
         // 경로가 있어야 함.
-        foreach (var wave in stageData.waves)
+        foreach (var wave in stageData.levels[GetLevel()].waves)
         {
             Debug.Log($"웨이브 시작: {wave.wave}");
             foreach (var monster in wave.monsters)

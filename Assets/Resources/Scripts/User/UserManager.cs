@@ -22,18 +22,11 @@ public class UserManager : MonoBehaviour
 {
     public event UnityAction<int> OnMoneyChanged;
     public event UnityAction<int, int> OnHpChanged;
-    public event UnityAction<int, int> OnSizeChanged;
-    public event UnityAction<int, int> OnStartChanged;
-    public event UnityAction<int, int> OnDestChanged;
+    public event UnityAction<int> OnLevelChanged;
     private const int MAX_HP = 100;
     private int money = 100;
     private int hp = MAX_HP;    // 현재 체력
-    private int xSize;    // 맵 크기
-    private int ySize;
-    private int xStart;       // 시작 위치
-    private int yStart;
-    private int xDest;        // 끝 위치
-    private int yDest;
+    private int level = 0;
     public void SubscribeMoneyAdd(IAddableMoney addable)
     {
         addable.OnAddMoney += DepositMoneyEvent;
@@ -53,13 +46,14 @@ public class UserManager : MonoBehaviour
     {
         OnMoneyChanged?.Invoke(money);
         OnHpChanged?.Invoke(hp, MAX_HP);
+        OnLevelChanged?.Invoke(level);
     }
 
     /// <summary>
     /// 출금
     /// </summary>
     /// <param name="value">금액</param>
-    public bool WithdrawMoneyEvent(int value)
+    private bool WithdrawMoneyEvent(int value)
     {
         if (money - value >= 0)
         {
@@ -77,38 +71,25 @@ public class UserManager : MonoBehaviour
     /// 입금
     /// </summary>
     /// <param name="value">금액</param>
-    public void DepositMoneyEvent(int value)
+    private void DepositMoneyEvent(int value)
     {
         money += value;
         OnMoneyChanged?.Invoke(money);
     }
 
-    public void HpDamaged(int value)
+    private void HpDamaged(int value)
     {
         hp -= value;
         OnHpChanged?.Invoke(hp, MAX_HP);
     }
 
-    public void SetMapSize(int x, int y)
+    public void LevelUp()
     {
-        xSize = x;
-        ySize = y;
-        OnSizeChanged?.Invoke(xSize, ySize);
+        level++;
+        OnLevelChanged?.Invoke(level);
     }
 
-    public void SetStartPosition(int x, int y)
-    {
-        xStart = x;
-        yStart = y;
-        OnStartChanged?.Invoke(xStart, yStart);
-    }
-
-    public void SetDestPosition(int x, int y)
-    {
-        xDest = x;
-        yDest = y;
-        OnDestChanged?.Invoke(xDest, yDest);
-    }
+    public int GetLevel() => level;
 
     private void OnDestroy()
     {

@@ -1,22 +1,46 @@
 {
-    "stage": 1,
-    "waves": [
+    "levels": [
         {
-            "wave": 1,
-            "monsters": [
-                { "type": "Noraml", "delay": 0 },
-                { "type": "Noraml", "delay": 2 }
-            ],
-            "waveDelay": 5
+            "waves": [
+                {
+                    "wave": 1,
+                    "monsters": [
+                        { "type": "Normal", "delay": 0 },
+                        { "type": "Normal", "delay": 2 }
+                    ],
+                    "waveDelay": 5
+                },
+                {
+                    "wave": 2,
+                    "monsters": [
+                        { "type": "Normal", "delay": 0 },
+                        { "type": "Normal", "delay": 2 },
+                        { "type": "Normal", "delay": 2 }
+                    ],
+                    "waveDelay": 5
+                }
+            ]
         },
         {
-            "wave": 2,
-            "monsters": [
-                { "type": "Noraml", "delay": 0 },
-                { "type": "Noraml", "delay": 2 },
-                { "type": "Noraml", "delay": 2 }
-            ],
-            "waveDelay": 5
+            "waves": [
+                {
+                    "wave": 2,
+                    "monsters": [
+                        { "type": "Fast", "delay": 0 },
+                        { "type": "Fast", "delay": 2 }
+                    ],
+                    "waveDelay": 5
+                },
+                {
+                    "wave": 2,
+                    "monsters": [
+                        { "type": "Fast", "delay": 0 },
+                        { "type": "Fast", "delay": 2 },
+                        { "type": "Fast", "delay": 2 }
+                    ],
+                    "waveDelay": 5
+                }
+            ]
         }
     ]
 }
