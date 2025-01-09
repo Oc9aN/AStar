@@ -10,6 +10,7 @@ namespace UnitSystem
         // 유닛에서 실행될 이벤트를 받아서 생성 후 전달
         public event UnityAction<int> OnAddMoney;
         public event UnityAction<int> CausingDamage;
+        public event UnityAction OnRemoveAllUnitEvent;
 
         [SerializeField] GameObject prefab;
         [SerializeField] float YMargin;
@@ -37,8 +38,13 @@ namespace UnitSystem
             unitObject.MoveByPath(path, YMargin);
 
             // 이벤트 등록
-            unitObject.OnRemoveEvent += () => OnAddMoney?.Invoke(unitObject.data.RewardMoney);
+            unitObject.OnDieEvent += () => OnAddMoney?.Invoke(unitObject.data.RewardMoney);
             unitObject.OnEndEvent += () => CausingDamage?.Invoke(unitObject.data.Damage);
+            unitObject.OnDestroyEvent += () =>
+            {
+                unitList.Remove(unitObject);
+                if (unitList.Count <= 0) OnRemoveAllUnitEvent?.Invoke();    // 모든 유닛이 제거된 경우 = level 끝
+            };
         }
     }
 }

@@ -1,16 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using MapSystem;
 using TowerSystem;
 using UnitSystem;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviour
+public interface IGameStateChanger
+{
+    public GameState GameState { get; set; }
+    public List<IGameStateListener> Listeners { get; set; }
+    public void AddListener(IGameStateListener listener);
+    public void RemoveListener(IGameStateListener listener);
+    public void NotifyListener();
+}
+public interface IGameStateListener
+{
+    public void UpdateGameState(GameState state);
+}
+
+public enum GameState
+{
+    READY,
+    ON_WAVE,
+    END_WAVE,
+}
+public class GameManager : MonoBehaviour, IGameStateChanger
 {
     // 이벤트
-    private event UnityAction<TypeTierData> OnCreateTower;
+    private event UnityAction<TypeTierData> TryCreateTower;
     private event UnityAction<string> OnCreateUnit;
 
     // JSON 데이터
@@ -22,7 +43,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] Button levelStartButton;
 
     // 상태 변수
-    private bool isPlayable;
+    private bool isPlayable;    // 경로가 존재하여 플레이가 가능한 상태
+    [SerializeField, ReadOnly] private GameState gameState = GameState.READY;
+    public GameState GameState { get { return gameState; } set { gameState = value; NotifyListener(); } }
+
+    private List<IGameStateListener> listeners = new();
+    public List<IGameStateListener> Listeners { get { return listeners; } set { listeners = value; } }
 
     #region Init
     private void Awake()
@@ -48,15 +74,19 @@ public class GameManager : MonoBehaviour
         var towerManager = GetComponentInChildren<TowerManager>();
 
         // 상호 이벤트 연결
-        uiManager.SubscribeUserDataUpdate(userManager);   // user의 데이터 변화를 감지
-        userManager.SubscribeMoneyAdd(unitManager);     // Unit이 사망하면 ADD 이벤트 등록
+        uiManager.SubscribeUserDataUpdate(userManager);     // user의 데이터 변화를 감지
+        userManager.SubscribeMoneyAdd(unitManager);         // unit이 user의 정보를 변경
         userManager.SubscribeHpDamaged(unitManager);
-        userManager.SubscribeMoneyUse(towerManager);
+        userManager.SubscribeMoneyUse(towerManager);        // tower가 user의 정보를 변경
 
-        mapManager.OnFindPath += (List<Vector3> path) => unitManager.path = path;
-        mapManager.OnFindPath += (List<Vector3> path) => isPlayable = path != null;
+        mapManager.OnCreateMap += AddListener;              // 타워들을 리스너로 추가
 
-        OnCreateTower += towerManager.CreateTowerByRandom;
+        mapManager.OnFindPath += (List<Vector3> path) => unitManager.path = path;   // unit이 이동할 path 전달
+        mapManager.OnFindPath += (List<Vector3> path) => isPlayable = path != null; // path가 null이 아니면 경로가 존재 = 플레이 가능
+
+        unitManager.OnRemoveAllUnitEvent += () => { if (GameState == GameState.END_WAVE) GameState = GameState.READY; };  // Ready로 변경
+
+        TryCreateTower += towerManager.TryCreateTowerByRandom;
         OnCreateUnit += unitManager.CreateUnit;
     }
 
@@ -64,7 +94,14 @@ public class GameManager : MonoBehaviour
     private void AddButtonEvent()
     {
         createTowerButton.onClick.AddListener(CreateTower);
-        levelStartButton.onClick.AddListener(() => { if (isPlayable) StartCoroutine(StartWave()); });
+        levelStartButton.onClick.AddListener(() =>
+        {
+            if (isPlayable && GameState == GameState.READY)
+            {
+                GameState = GameState.ON_WAVE;
+                StartCoroutine(StartWave());
+            }
+        });
     }
 
     // JSON데이터 읽기
@@ -94,6 +131,7 @@ public class GameManager : MonoBehaviour
             }
             yield return new WaitForSeconds(wave.waveDelay);
         }
+        GameState = GameState.END_WAVE;
         yield break;
     }
     #endregion
@@ -102,7 +140,31 @@ public class GameManager : MonoBehaviour
     public void CreateTower()
     {
         // 랜덤으로 타워 생성, 타입과 티어로 구별, 티어는 0~4까지, 티어가 낮을수록 강한것
-        OnCreateTower?.Invoke(typeTierData);
+        TryCreateTower?.Invoke(typeTierData);
+    }
+    #endregion
+
+    #region State
+
+    public void AddListener(GameObject[] objArray)
+    {
+        IGameStateListener[] listenerArray = objArray.Select(n => n.GetComponent<IGameStateListener>()).ToArray();
+        Listeners.AddRange(listenerArray);
+    }
+
+    public void AddListener(IGameStateListener listener)
+    {
+        Listeners.Add(listener);
+    }
+
+    public void RemoveListener(IGameStateListener listener)
+    {
+        Listeners.Remove(listener);
+    }
+
+    public void NotifyListener()
+    {
+        Listeners.ForEach(n => n.UpdateGameState(GameState));
     }
     #endregion
 }

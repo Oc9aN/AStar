@@ -13,7 +13,7 @@ namespace TowerSystem
         [SerializeField] TowerDrag normalTower; // 드래그가 가능한 타워
         [SerializeField] TowerList towerList;
 
-        public void CreateTowerByRandom(TypeTierData typeTierData)
+        public void TryCreateTowerByRandom(TypeTierData typeTierData)
         {
             (string type, int tier) = RandomManager.RandomTower(typeTierData.types, typeTierData.tierPercents[0].percents);
             CreateTower(type, tier);
@@ -23,23 +23,23 @@ namespace TowerSystem
         {
             if (!OnSpendMoney(towerCost)) return;
 
-            IPlaceable tower = null;
+            GameObject tower = null;
             switch (type)
             {
                 case "Normal":
                     switch (tier)
                     {
                         case 0:
-                            tower = Instantiate(normalTower, Camera.main.transform.position, Quaternion.identity);
+                            tower = Instantiate(normalTower, Camera.main.transform.position, Quaternion.identity).gameObject;
                             break;
                     }
                     break;
                 default:
-                    tower = Instantiate(normalTower, Camera.main.transform.position, Quaternion.identity);
+                    tower = Instantiate(normalTower, Camera.main.transform.position, Quaternion.identity).gameObject;
                     break;
             }
 
-            towerList.AddTowers(tower);
+            towerList.AddTowers(tower.GetComponent<IPlaceable>());
         }
     }
 }

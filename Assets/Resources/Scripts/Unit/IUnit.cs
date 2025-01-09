@@ -6,7 +6,8 @@ namespace UnitSystem
 {
     public interface IUnit
     {
-        public event UnityAction OnRemoveEvent;
+        public event UnityAction OnDestroyEvent;
+        public event UnityAction OnDieEvent;
         public event UnityAction OnEndEvent;
         public void MoveByPath(List<Vector3> path, float YMargin);
         public void OnDamaged(int damage);

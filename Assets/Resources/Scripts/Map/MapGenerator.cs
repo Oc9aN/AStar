@@ -13,6 +13,7 @@ namespace MapSystem
         [Header("노드 간 간격")]
         [SerializeField] float nodeGap;
         private GameObject[,] objects = null;
+        public GameObject[,] Objects { get { return objects; } }
         private Node[,] map = null;
 
         public GameObject GetNode(int x, int y) => objects[x, y];

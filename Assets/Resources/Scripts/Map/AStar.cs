@@ -104,33 +104,33 @@ namespace MapSystem
                         continue;                   // 장애물인 경우
 
                     // 이미 방문한 노드인 경우 OR 대각선 이동 불가인 경우
-                    switch (dir[i])
-                    {
-                        case Dir.LeftUp:
-                            if (IsObstacleInDirection(parentNode.x - 1, parentNode.y))
-                                continue;
-                            if (IsObstacleInDirection(parentNode.x, parentNode.y + 1))
-                                continue;
-                            break;
-                        case Dir.RightUp:
-                            if (IsObstacleInDirection(parentNode.x + 1, parentNode.y))
-                                continue;
-                            if (IsObstacleInDirection(parentNode.x, parentNode.y + 1))
-                                continue;
-                            break;
-                        case Dir.LeftDown:
-                            if (IsObstacleInDirection(parentNode.x - 1, parentNode.y))
-                                continue;
-                            if (IsObstacleInDirection(parentNode.x, parentNode.y - 1))
-                                continue;
-                            break;
-                        case Dir.RightDown:
-                            if (IsObstacleInDirection(parentNode.x + 1, parentNode.y))
-                                continue;
-                            if (IsObstacleInDirection(parentNode.x, parentNode.y + 1))
-                                continue;
-                            break;
-                    }
+                    // switch (dir[i])
+                    // {
+                    //     case Dir.LeftUp:
+                    //         if (IsObstacleInDirection(parentNode.x - 1, parentNode.y))
+                    //             continue;
+                    //         if (IsObstacleInDirection(parentNode.x, parentNode.y + 1))
+                    //             continue;
+                    //         break;
+                    //     case Dir.RightUp:
+                    //         if (IsObstacleInDirection(parentNode.x + 1, parentNode.y))
+                    //             continue;
+                    //         if (IsObstacleInDirection(parentNode.x, parentNode.y + 1))
+                    //             continue;
+                    //         break;
+                    //     case Dir.LeftDown:
+                    //         if (IsObstacleInDirection(parentNode.x - 1, parentNode.y))
+                    //             continue;
+                    //         if (IsObstacleInDirection(parentNode.x, parentNode.y - 1))
+                    //             continue;
+                    //         break;
+                    //     case Dir.RightDown:
+                    //         if (IsObstacleInDirection(parentNode.x + 1, parentNode.y))
+                    //             continue;
+                    //         if (IsObstacleInDirection(parentNode.x, parentNode.y + 1))
+                    //             continue;
+                    //         break;
+                    // }
                     Node isClose = closeList.Find((n) => n.x == nextX && n.y == nextY);
                     if (isClose != null)
                         continue;

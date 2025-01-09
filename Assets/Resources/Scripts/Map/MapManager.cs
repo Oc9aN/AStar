@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnitSystem;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,13 +8,15 @@ namespace MapSystem
 {
     [RequireComponent(typeof(MapGenerator))]
     [RequireComponent(typeof(MapUIInput))]
-    public class MapManager : MonoBehaviour
+    public class MapManager : MonoBehaviour, IGameStateListener
     {
+        public event UnityAction<GameObject[]> OnCreateMap;
         public event UnityAction<List<Vector3>> OnFindPath;
         private MapGenerator mapGenerator;
         private MapUIInput uiInputView;
         private AStar aStar;
         private List<Node> path = null;
+        private GameState gameState;
         private void Awake()
         {
             mapGenerator = GetComponent<MapGenerator>();
@@ -38,13 +41,15 @@ namespace MapSystem
         {
             // 맵이 바뀔때마다 경로 재탐색
             aStar.SetMap(map);
-            OnPathRequested();
+            if (gameState == GameState.READY)
+                OnPathRequested();
         }
 
         private void CreateMap()
         {
             (int x, int y) = uiInputView.GetMapSize();
             mapGenerator.CreateMap(x, y);
+            OnCreateMap?.Invoke(mapGenerator.Objects.Cast<GameObject>().ToArray());
         }
 
         public void OnPathRequested()
@@ -88,6 +93,11 @@ namespace MapSystem
                 vectorPath.Reverse(); // 리스트를 뒤집음
                 return vectorPath;
             }
+        }
+
+        public void UpdateGameState(GameState state)
+        {
+            gameState = state;
         }
     }
 }

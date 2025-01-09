@@ -10,7 +10,8 @@ namespace UnitSystem
 {
     public class NormalUnit : MonoBehaviour, IUnit
     {
-        public event UnityAction OnRemoveEvent;
+        public event UnityAction OnDestroyEvent;
+        public event UnityAction OnDieEvent;
         public event UnityAction OnEndEvent;
 
         [SerializeField] UnitData unitData;
@@ -62,7 +63,7 @@ namespace UnitSystem
             if (hpPercent <= 0)
             {
                 hpPercent = 0f; // 사망
-                OnRemoveEvent?.Invoke();
+                OnDieEvent?.Invoke();
                 Destroy(gameObject);
             }
             Vector3 newScale = Vector3.one;
@@ -72,7 +73,10 @@ namespace UnitSystem
 
         private void OnDestroy()
         {
-            OnRemoveEvent = null;
+            OnDestroyEvent?.Invoke();
+            OnDieEvent = null;
+            OnEndEvent = null;
+            OnDestroyEvent = null;
         }
     }
 }
