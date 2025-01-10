@@ -17,7 +17,7 @@
                         { "type": "Normal", "delay": 2 },
                         { "type": "Normal", "delay": 2 }
                     ],
-                    "waveDelay": 5
+                    "waveDelay": 0
                 }
             ]
         },
@@ -38,7 +38,7 @@
                         { "type": "Fast", "delay": 2 },
                         { "type": "Fast", "delay": 2 }
                     ],
-                    "waveDelay": 5
+                    "waveDelay": 0
                 }
             ]
         }

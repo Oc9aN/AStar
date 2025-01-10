@@ -51,7 +51,8 @@ namespace TowerSystem
 
         public IEnumerator RangeCheck()
         {
-            if (target == null) yield break;
+            if (target == null)
+                yield break;
 
             float distance = Vector3.Distance(transform.position, target.transform.position);
             while (distance < data[towerLevel].Radius && target != null)  // 사거리 체크
@@ -62,7 +63,7 @@ namespace TowerSystem
             }
 
             // 공격 멈추고 다음 타겟 선정
-            StopCoroutine(AttackCoroutine);
+            if (AttackCoroutine != null) StopCoroutine(AttackCoroutine);
             target = null;
             findingTargetCoroutine = StartCoroutine(GetTarget());
             yield break;
@@ -80,11 +81,11 @@ namespace TowerSystem
                 yield return null;
             }
 
-            Debug.Log("타겟 감지");
             // 범위 내 객체를 거리순으로 정렬
             List<Collider> sortedColliders = hitColliders.OrderBy(collider => Vector3.Distance(transform.position, collider.transform.position)).ToList();
 
             target = sortedColliders[0].gameObject;
+            Debug.Log($"타겟 감지 : {target.name}");
             // 타겟과 거리 체크하면서 공격
             RangeCheckCoroutine = StartCoroutine(RangeCheck());
             AttackCoroutine = StartCoroutine(Attack());

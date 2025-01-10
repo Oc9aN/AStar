@@ -85,6 +85,7 @@ public class GameManager : MonoBehaviour, IGameStateChanger
         mapManager.OnCreateMap += (_) => NotifyListener();
         towerManager.OnCreateTower += AddListener;
         towerManager.OnCreateTower += (_) => NotifyListener();
+        AddListener(towerManager);
 
         mapManager.OnFindPath += (List<Vector3> path) => unitManager.path = path;   // unit이 이동할 path 전달
         mapManager.OnFindPath += (List<Vector3> path) => isPlayable = path != null; // path가 null이 아니면 경로가 존재 = 플레이 가능
@@ -96,7 +97,7 @@ public class GameManager : MonoBehaviour, IGameStateChanger
                 // wave 종료인 상황
                 GameState = GameState.READY;    // Ready로 변경
                 userManager.LevelUp();
-                towerManager.DelayedUpgrade.Invoke();
+                towerManager.DelayedUpgrade?.Invoke();
             }
         };
 

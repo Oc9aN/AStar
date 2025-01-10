@@ -1070,6 +1070,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ced606d7e14b1464cb210cc52c85162f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  upgradeCount: 3
   towerCost: 50
   normalTower: {fileID: -459789572042200205, guid: c17a60df1daf55747a4e5a5e0a3c4105, type: 3}
 --- !u!114 &492627398
@@ -2798,7 +2799,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uBCF4\uC720 \uAE08\uC561"
+  m_text: "\uD604\uC7AC \uB2E8\uACC4"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9e6b8f9a3ad1af842bc4608314bf0cdb, type: 2}
   m_sharedMaterial: {fileID: -8830797301182771444, guid: 9e6b8f9a3ad1af842bc4608314bf0cdb, type: 2}
@@ -2825,7 +2826,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32.3
+  m_fontSize: 29.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
