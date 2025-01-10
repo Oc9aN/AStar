@@ -6,7 +6,7 @@ public interface ITower
 {
     public void ActiveTower();
     public void InActiveTower();
-    public IEnumerator Attack();
-    public IEnumerator RangeCheck();
-    public IEnumerator GetTarget();
+    public (TowerType type, int level) GetTowerInfo();
+    public bool UpgradeTower();
+    public void Sacrificed();
 }

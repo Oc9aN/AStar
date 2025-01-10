@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace TowerSystem
 {
+    /// <summary>
+    /// 타워 대기 리스트
+    /// </summary>
     public class TowerList : MonoBehaviour
     {
         private List<TowerListNode> towerListNodes;

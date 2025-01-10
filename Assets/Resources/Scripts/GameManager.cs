@@ -93,10 +93,12 @@ public class GameManager : MonoBehaviour, IGameStateChanger
         {
             if (GameState == GameState.END_WAVE)
             {
-                GameState = GameState.READY;
+                // wave 종료인 상황
+                GameState = GameState.READY;    // Ready로 변경
                 userManager.LevelUp();
+                towerManager.DelayedUpgrade.Invoke();
             }
-        };  // Ready로 변경
+        };
 
         TryCreateTower += towerManager.TryCreateTowerByRandom;
         OnCreateUnit += unitManager.CreateUnit;

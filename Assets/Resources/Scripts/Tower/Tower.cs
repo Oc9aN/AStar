@@ -12,19 +12,36 @@ namespace TowerSystem
     public class Tower : MonoBehaviour, ITower
     {
         // 가장 가까운 target을 찾고 범위를 나갈 때까지 공격, 이후 다시 반복
+        // 데이터
         [SerializeField] protected TowerData[] data;
-        [SerializeField, ReadOnly] protected int towerLevel = 0;
-        private int targetLayer => 1 << LayerMask.NameToLayer("Unit");
+        [SerializeField] int maxLevel = 2;
+        [SerializeField] protected int towerLevel = 0;
 
         // 배치시 true
         private bool isActive;
         public bool IsActive { get { return isActive; } set { isActive = value; } }
 
+        // 타겟
+        private int targetLayer => 1 << LayerMask.NameToLayer("Unit");
         protected GameObject target;
 
+        // 코루틴
         protected Coroutine findingTargetCoroutine;
         protected Coroutine RangeCheckCoroutine;
         private Coroutine AttackCoroutine;
+
+        public (TowerType type, int level) GetTowerInfo() => (data[towerLevel].Type, towerLevel);
+
+        public bool UpgradeTower()
+        {
+            if (towerLevel + 1 <= maxLevel)
+            {
+                towerLevel += 1;
+                return true;
+            }
+            return false;
+        }
+        public void Sacrificed() => Destroy(gameObject);
 
         public void ActiveTower() => RangeCheckCoroutine = StartCoroutine(GetTarget());
 
