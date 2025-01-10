@@ -23,8 +23,8 @@ public class UserManager : MonoBehaviour
     public event UnityAction<int> OnMoneyChanged;
     public event UnityAction<int, int> OnHpChanged;
     public event UnityAction<int> OnLevelChanged;
-    private const int MAX_HP = 100;
-    private int money = 100;
+    [SerializeField] const int MAX_HP = 100;
+    [SerializeField] int money = 100;
     private int hp = MAX_HP;    // 현재 체력
     private int level = 0;
     public void SubscribeMoneyAdd(IAddableMoney addable)

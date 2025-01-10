@@ -15,6 +15,11 @@ namespace TowerSystem
             towerListNodes = GetComponentsInChildren<TowerListNode>().ToList();
         }
 
+        public bool HasEmptyNode()
+        {
+            return towerListNodes.Any(n => !n.HasChild());
+        }
+
         public void AddTowers(IPlaceable placeable)
         {
             towerListNodes.ForEach(n =>

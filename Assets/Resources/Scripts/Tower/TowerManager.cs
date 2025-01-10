@@ -28,7 +28,7 @@ namespace TowerSystem
 
         private void CreateTower(string type, int tier)
         {
-            if (!OnSpendMoney(towerCost)) return;
+            if (!towerList.HasEmptyNode() || !OnSpendMoney(towerCost)) return;
 
             TowerDrag tower = null;
             switch (type)
