@@ -116,6 +116,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 100b8779e903b0d4da087ea272de80fb, type: 2}
   - {fileID: 11400000, guid: 505e48ede88173e4a806458083a14f1b, type: 2}
   - {fileID: 11400000, guid: b0d8993618c8ee94097f61b893ff0124, type: 2}
+  maxLevel: 2
   towerLevel: 0
 --- !u!114 &-459789572042200205
 MonoBehaviour:
