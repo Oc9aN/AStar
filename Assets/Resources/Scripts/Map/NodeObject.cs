@@ -1,11 +1,12 @@
 using System;
 using TowerSystem;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace MapSystem
 {
-    public class NodeObject : MonoBehaviour, IParentable, IGameStateListener
+    public class NodeObject : MonoBehaviour, IParentable, IGameStateListener, IPointerDownHandler
     {
         public event Action<int, int> OnSetObstacleEvent;
         public event Action<int, int> OnSetNonObstacleEvent;
@@ -27,6 +28,9 @@ namespace MapSystem
             prevColor = MainColor;
             placedObejct = null;
             meshRenderer = GetComponent<MeshRenderer>();
+
+            // 테스트
+            OnSetNonObstacleEvent += (_, _) => meshRenderer.material.color = Color.white;
         }
 
         public void SetPath()
@@ -92,6 +96,18 @@ namespace MapSystem
         public void UpdateGameState(GameState state)
         {
             gameState = state;
+        }
+
+        // 테스트용
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            OnSetObstacleEvent += (_, _) => meshRenderer.material.color = Color.black;
+            if (Input.GetMouseButton(0))
+                OnSetObstacleEvent?.Invoke(x, y);
+            else
+                OnSetNonObstacleEvent?.Invoke(x, y);
+            OnSetObstacleEvent -= (_, _) => meshRenderer.material.color = Color.black;
+            OnSetNonObstacleEvent -= (_, _) => meshRenderer.material.color = Color.white;
         }
     }
 }
